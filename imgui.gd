@@ -19,8 +19,14 @@ func _process(_delta: float) -> void:
 
 
 func begin_tabs() -> void:
-	# TODO: Push zero spacing override here
+	
 	begin_vbox()
+	# TODO: Refactor styling
+	__parent.add_theme_constant_override("separation", 0)
+	__parent.custom_minimum_size.x = 400
+	__parent.set_anchors_preset(Control.PRESET_FULL_RECT)
+	__parent.alignment = BoxContainer.ALIGNMENT_BEGIN
+		
 	var current := _get_current_node()
 	if current is not TabBar:
 		_destroy_rest_of_this_layout_level()
@@ -30,6 +36,7 @@ func begin_tabs() -> void:
 	__cursor[__cursor.size() - 1] += 1 # Next node
 	
 	begin_panel()
+	__parent.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	__parent.set_meta(&"_imgui_tab_bar", true)
 	__parent.set_meta(&"_imgui_tab_visited", -1)
 
@@ -48,8 +55,8 @@ func tab(tab_name: String) -> bool:
 		tab_bar.add_tab(tab_name)
 	else:
 		if not tab_bar.get_tab_title(index) == tab_name:
-			while tab_bar.tab_count >= index:
-				tab_bar.remove_tab(-1)
+			while tab_bar.tab_count > index:
+				tab_bar.remove_tab(tab_bar.tab_count - 1)
 			tab_bar.add_tab(tab_name)
 	
 	tab_container.set_meta(&"_imgui_tab_visited", index)
