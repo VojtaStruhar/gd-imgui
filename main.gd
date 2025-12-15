@@ -20,6 +20,8 @@ func _process(delta: float) -> void:
 		begin_vbox()
 		label("Imgui in Godot!")
 		
+		progress_bar(frame_number % 1000, 1000)
+		
 		if button("Press me"):
 			timer.start(3)
 		

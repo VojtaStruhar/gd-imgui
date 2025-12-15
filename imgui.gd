@@ -74,6 +74,20 @@ func end_tabs() -> void:
 	assert(__parent is VBoxContainer)
 	end_vbox()
 
+func progress_bar(value: float, max_val: float, show_percentage: bool = true) -> void:
+	var current := _get_current_node()
+	if current is not ProgressBar:
+		_destroy_rest_of_this_layout_level()
+		var pb := ProgressBar.new()
+		__parent.add_child(pb)
+		current = pb
+	
+	current.min_value = 0
+	current.max_value = max_val
+	current.value = value
+	current.show_percentage = show_percentage
+	
+	__cursor[__cursor.size() - 1] += 1 # Next node
 
 func toggle(on: bool, text: String = "") -> bool:
 	var current := _get_current_node()
