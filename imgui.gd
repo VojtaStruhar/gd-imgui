@@ -229,6 +229,38 @@ func end_vbox() -> void:
 	__cursor[__cursor.size() - 1] += 1
 
 
+func begin_margin(margin: int) -> void:
+	begin_margin_v(Vector4i.ONE * margin)
+
+func begin_margin_v(margin:  Vector4i) -> void:
+	var c := _get_current_node()
+	if c is not MarginContainer:
+		_destroy_rest_of_this_layout_level()
+		var mc := MarginContainer.new()
+		mc.name = str(__cursor).validate_node_name()
+		__parent.add_child(mc)
+		c = mc
+
+	c.add_theme_constant_override(&"margin_left", margin.x)
+	c.add_theme_constant_override(&"margin_top", margin.y)
+	c.add_theme_constant_override(&"margin_right", margin.z)
+	c.add_theme_constant_override(&"margin_bottom", margin.w)
+
+	__parent = c
+	__cursor.append(0)
+
+
+func end_margin() -> void:
+	assert(__parent is MarginContainer)
+	if __parent.get_child_count() != __cursor[__cursor.size() - 1]:
+		_destroy_rest_of_this_layout_level()
+
+	__parent = __parent.get_parent()
+	__cursor.pop_back()
+	__cursor[__cursor.size() - 1] += 1
+
+
+
 func begin_hbox() -> void:
 	var c := _get_current_node()
 	if c is not HBoxContainer:

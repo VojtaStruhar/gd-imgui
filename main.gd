@@ -21,6 +21,7 @@ func _process(delta: float) -> void:
 	super(delta)
 	frame_number += 1
 	begin_tabs()
+	begin_margin(10)
 	
 	if tab("Game"):
 		_game_tab()
@@ -32,21 +33,37 @@ func _process(delta: float) -> void:
 	if tab("Other"):
 		label("Some junk here")
 	
+	end_margin()
 	end_tabs()
 
 func _game_tab() -> void:
 	begin_vbox()
+	
 	label("Imgui in Godot!")
 	
-	progress_bar(frame_number % 1000, 1000)
+	begin_tabs()
+	begin_margin(10)
 	
-	if button("Press me"):
-		timer.start(3)
 	
-	if !timer.is_stopped() and timer.time_left > 0:
-		label("This label wil disappear in  %.2fs" % timer.time_left)
+	if tab("Basic"):
+		begin_vbox()
+		progress_bar(frame_number % 1000, 1000)
+		
+		if button("Press me"):
+			timer.start(3)
+		
+		if !timer.is_stopped() and timer.time_left > 0:
+			label("This label wil disappear in  %.2fs" % timer.time_left)
+		
+		show_advanced = toggle(show_advanced, "Show Advanced")
+		end_vbox()
 	
-	show_advanced = toggle(show_advanced, "Show Advanced")
+	if tab("Lesgo"):
+		label(":pog:")
+	
+	end_margin()
+	end_tabs()
+	
 	end_vbox()
 
 func _advanced_tab() -> void:
