@@ -61,6 +61,7 @@ func _game_tab() -> void:
 			label("This label wil disappear in  %.2fs" % timer.time_left)
 		
 		show_advanced = toggle(show_advanced, "Show Advanced")
+		show_advanced = checkbox(show_advanced, "Show Advanced")
 		end_vbox()
 	
 	if tab("Configuration"):

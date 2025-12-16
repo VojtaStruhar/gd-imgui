@@ -97,11 +97,30 @@ func toggle(on: bool, text: String = "") -> bool:
 		_destroy_rest_of_this_layout_level()
 		var check := CheckButton.new()
 		check.text = text
-		check.button_pressed = on
 		check.name = str(__cursor).validate_node_name()
+		check.button_pressed = on
+		check.toggled.connect(_register_button_toggle.bind(check))
 		__parent.add_child(check)
 		current = check
 
+	current.button_pressed = __inputs.get(self.get_path_to(current), {}).get("value", on)
+	__cursor[__cursor.size() - 1] += 1 # Next node
+
+	return current.button_pressed
+
+
+func checkbox(on: bool, text: String = "") -> bool:
+	var current := _get_current_node()
+	if current is not CheckBox:
+		_destroy_rest_of_this_layout_level()
+		var check := CheckBox.new()
+		check.text = text
+		check.name = str(__cursor).validate_node_name()
+		check.toggled.connect(_register_button_toggle.bind(check))
+		__parent.add_child(check)
+		current = check
+
+	current.button_pressed = __inputs.get(self.get_path_to(current), {}).get("value", on)
 	__cursor[__cursor.size() - 1] += 1 # Next node
 
 	return current.button_pressed
@@ -390,12 +409,14 @@ func end_grid() -> void:
 func _register_button_press(b: Button) -> void:
 	__inputs[self.get_path_to(b)] = { }
 
+func _register_button_toggle(new_value: bool, b: BaseButton) -> void:
+	__inputs[self.get_path_to(b)] = { "value": new_value }
+
 func _register_textfield_input(new_text: String, le: LineEdit) -> void:
 	__inputs[self.get_path_to(le)] = { "value": new_text }
 
 func _register_dropdown_select(ob: OptionButton) -> void:
 	__inputs[self.get_path_to(ob)] = { "value": ob.selected }
-
 
 func _register_spinbox_change(new_value: float, origin: Control) -> void:
 	__inputs[self.get_path_to(origin)] = { "value": new_value }
