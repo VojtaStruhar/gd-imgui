@@ -162,6 +162,31 @@ func button(text: String) -> bool:
 	return __inputs.erase(np)
 
 
+func textfield(text: String) -> String:
+	var current := _get_current_node()
+	if current is not LineEdit:
+		_destroy_rest_of_this_layout_level()
+		var le := LineEdit.new()
+		le.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		le.name = str(__cursor).validate_node_name()
+		le.text_changed.connect(_register_textfield_input.bind(le))
+		__parent.add_child(le)
+		current = le
+	
+	var np := self.get_path_to(current)
+	if __inputs.has(np):
+		__inputs.erase(np)
+	else:
+		# Setting text on a focused line edit messes with cursor
+		# Also unnecessary text updates cause re-renders
+		if not current.has_focus() and current.text != text: 
+			current.text = text
+	
+	__cursor[__cursor.size() - 1] += 1 # Next node
+	
+	return current.text
+
+
 func dropdown(selected_index: int, options: Array[String]) -> int:
 	var current := _get_current_node()
 	if current is not OptionButton:
@@ -331,9 +356,12 @@ func end_grid() -> void:
 	__cursor[__cursor.size() - 1] += 1
 
 
+
 func _register_button_press(b: Button) -> void:
 	__inputs[self.get_path_to(b)] = { }
 
+func _register_textfield_input(new_text: String, le: LineEdit) -> void:
+	__inputs[self.get_path_to(le)] = { "value": new_text }
 
 func _register_dropdown_select(ob: OptionButton) -> void:
 	__inputs[self.get_path_to(ob)] = { "value": ob.selected }

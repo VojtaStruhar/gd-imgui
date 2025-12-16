@@ -5,7 +5,7 @@ var show_advanced := true
 
 var resource_options: Array[String] = ["Wisdom", "Gear", "Mana"]
 var resource_selected := 0
-
+var server: String = "https://server.vojtechstruhar.com"
 
 @onready var timer := Timer.new()
 
@@ -58,8 +58,14 @@ func _game_tab() -> void:
 		show_advanced = toggle(show_advanced, "Show Advanced")
 		end_vbox()
 	
-	if tab("Lesgo"):
-		label(":pog:")
+	if tab("Configuration"):
+		begin_grid(2)
+		label("Server address:")
+		server = textfield(server)
+		label("One more:")
+		server = textfield(server)
+		
+		end_grid()
 	
 	end_margin()
 	end_tabs()
