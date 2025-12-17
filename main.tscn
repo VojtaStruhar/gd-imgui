@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://bv12a7irye02g"]
+[gd_scene load_steps=3 format=3 uid="uid://bv12a7irye02g"]
 
 [ext_resource type="Script" uid="uid://dn82ykykp56fk" path="res://main.gd" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://bo18f7fx555fw" path="res://imgui.gd" id="2_0xm2m"]
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -10,3 +11,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ig7tw")
+
+[node name="Imgui" type="Control" parent="."]
+layout_mode = 1
+anchor_right = 0.5
+anchor_bottom = 1.0
+grow_vertical = 2
+script = ExtResource("2_0xm2m")

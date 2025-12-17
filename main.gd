@@ -1,4 +1,5 @@
-extends ImGui
+extends Control
+
 
 var frame_number: int = 0
 var show_advanced := true
@@ -14,98 +15,97 @@ var probabilities: Dictionary[String, float] = {
 }
 
 @onready var timer := Timer.new()
+@onready var g: ImGui = $Imgui
 
 
 
 func _ready() -> void:
-	super()
 	timer.one_shot = true
 	get_parent().add_child.call_deferred(timer)
 	
 
-func _process(delta: float) -> void:
-	super(delta)
+func _process(_delta: float) -> void:
 	frame_number += 1
-	begin_tabs()
-	begin_margin(10)
+	g.begin_tabs()
+	g.begin_margin(10)
 	
-	if tab("Game"):
+	if g.tab("Game"):
 		_game_tab()
 		
 	if show_advanced:
-		if tab("Game - advanced"):
+		if g.tab("Game - advanced"):
 			_advanced_tab()
 	
-	if tab("Other"):
-		label("Some junk here")
+	if g.tab("Other"):
+		g.label("Some junk here")
 	
-	end_margin()
-	end_tabs()
+	g.end_margin()
+	g.end_tabs()
 
 func _game_tab() -> void:
-	begin_vbox()
+	g.begin_vbox()
 	
-	label("Imgui in Godot!")
+	g.label("Imgui in Godot!")
 	
-	begin_tabs()
-	begin_margin(10)
+	g.begin_tabs()
+	g.begin_margin(10)
 	
-	if tab("Basic"):
-		begin_vbox()
-		progress_bar(frame_number % 1000, 1000)
+	if g.tab("Basic"):
+		g.begin_vbox()
+		g.progress_bar(frame_number % 1000, 1000)
 		
-		if button("Press me"):
+		if g.button("Press me"):
 			timer.start(3)
 		
 		if !timer.is_stopped() and timer.time_left > 0:
-			label("This label wil disappear in  %.2fs" % timer.time_left)
+			g.label("This label wil disappear in  %.2fs" % timer.time_left)
 		
-		show_advanced = toggle(show_advanced, "Show Advanced")
-		show_advanced = checkbox(show_advanced, "Show Advanced")
-		end_vbox()
+		show_advanced = g.toggle(show_advanced, "Show Advanced")
+		show_advanced = g.checkbox(show_advanced, "Show Advanced")
+		g.end_vbox()
 	
-	if tab("Configuration"):
-		begin_vbox()
-		begin_grid(2)
-		label("Server address:")
-		server = textfield(server)
-		end_grid()
+	if g.tab("Configuration"):
+		g.begin_vbox()
+		g.begin_grid(2)
+		g.label("Server address:")
+		server = g.textfield(server)
+		g.end_grid()
 		
-		separator()
+		g.separator()
 		
-		begin_panel()
-		begin_margin(10)
-		begin_vbox()
-		label("Drop chances")
+		g.begin_panel()
+		g.begin_margin(10)
+		g.begin_vbox()
+		g.label("Drop chances")
 		var total: float = probabilities.values().reduce(func(a: float, b: float): return a + b, 0.0)
-		begin_grid(3)
+		g.begin_grid(3)
 		for key in probabilities:
-			label(key.capitalize())
-			probabilities[key] = slider_h(probabilities[key], 0.0, 1.0, 0.01)
-			label("%.2f%%" % (100.0 * probabilities[key] / total))
-		end_grid()
-		end_vbox()
-		end_margin()
-		end_panel()
-		end_vbox()
+			g.label(key.capitalize())
+			probabilities[key] = g.slider_h(probabilities[key], 0.0, 1.0, 0.01)
+			g.label("%.2f%%" % (100.0 * probabilities[key] / total))
+		g.end_grid()
+		g.end_vbox()
+		g.end_margin()
+		g.end_panel()
+		g.end_vbox()
 	
-	end_margin()
-	end_tabs()
+	g.end_margin()
+	g.end_tabs()
 	
-	end_vbox()
+	g.end_vbox()
 
 func _advanced_tab() -> void:
-	begin_vbox()
-	begin_grid(2)
-	label("Frame number:")
-	label(str(frame_number))
-	label("OS Name:")
-	label(OS.get_name())
+	g.begin_vbox()
+	g.begin_grid(2)
+	g.label("Frame number:")
+	g.label(str(frame_number))
+	g.label("OS Name:")
+	g.label(OS.get_name())
 	
-	label("Resources:")
-	resource_selected = dropdown(resource_selected, resource_options)
-	end_grid()
+	g.label("Resources:")
+	resource_selected = g.dropdown(resource_selected, resource_options)
+	g.end_grid()
 	
-	label("+100 %s" % resource_options[resource_selected])
-	resource_selected = spinbox(resource_selected, 0, resource_options.size() - 1)
-	end_vbox()
+	g.label("+100 %s" % resource_options[resource_selected])
+	resource_selected = g.spinbox(resource_selected, 0, resource_options.size() - 1)
+	g.end_vbox()
