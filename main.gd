@@ -7,6 +7,7 @@ var show_advanced := true
 var resource_options: Array[String] = ["Wisdom", "Gear", "Mana"]
 var resource_selected := 0
 var server: String = "https://server.vojtechstruhar.com"
+var music_volume: float = 80
 var probabilities: Dictionary[String, float] = {
 	"common": 0.9,
 	"rare": 0.5,
@@ -37,7 +38,19 @@ func _process(_delta: float) -> void:
 			_advanced_tab()
 	
 	if g.tab("Other"):
+		g.begin_vbox()
 		g.label("Some junk here")
+		g.begin_hbox()
+		g.label("Music volume")
+		for i in range(4):
+			g.begin_vbox()
+			music_volume = g.slider_v(music_volume, 40, 120)
+			g.label("%ddb" % music_volume)
+			g.end_vbox()
+		
+		g.end_hbox()
+		g.end_vbox()
+		
 	
 	g.end_margin()
 	g.end_tabs()

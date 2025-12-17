@@ -51,7 +51,7 @@ Some features have different names to be familiar to Godot developers._
   - [x] Toggle
   - [x] Checkbox
   - [x] Separators
-  - [ ] Sliders
+  - [x] Sliders
   - [ ] Text area
   - [ ] Color picker
 - [ ] Styling

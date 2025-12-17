@@ -279,7 +279,34 @@ func slider_h(value: float, min_val: float, max_val: float, step: float = 1) -> 
 	current.min_value = min_val
 	current.max_value = max_val
 	current.step = step
-	current.set_value_no_signal(__inputs.get(self.get_path_to(current), {}).get("value", value))
+	var np := self.get_path_to(current)
+	current.set_value_no_signal(__inputs.get(np, {}).get("value", value))
+	if __inputs.has(np): __inputs.erase(np)
+
+	__cursor[__cursor.size() - 1] += 1 # Next node
+
+	return current.value
+
+func slider_v(value: float, min_val: float, max_val: float, step: float = 1) -> float:
+	var current := _get_current_node()
+	if current is not VSlider:
+		_destroy_rest_of_this_layout_level()
+		var vs := VSlider.new()
+		vs.custom_minimum_size.y = 150
+		vs.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		vs.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		vs.name = str(__cursor).validate_node_name()
+		vs.value_changed.connect(_register_spinbox_change.bind(vs))
+		__parent.add_child(vs)
+		current = vs
+	
+	current.min_value = min_val
+	current.max_value = max_val
+	current.step = step
+	
+	var np := self.get_path_to(current)
+	current.set_value_no_signal(__inputs.get(np, {}).get("value", value))
+	if __inputs.has(np): __inputs.erase(np)
 
 	__cursor[__cursor.size() - 1] += 1 # Next node
 
