@@ -98,12 +98,14 @@ func toggle(on: bool, text: String = "") -> bool:
 		var check := CheckButton.new()
 		check.text = text
 		check.name = str(__cursor).validate_node_name()
-		check.button_pressed = on
 		check.toggled.connect(_register_button_toggle.bind(check))
 		__parent.add_child(check)
 		current = check
 
-	current.button_pressed = __inputs.get(self.get_path_to(current), {}).get("value", on)
+	var np := self.get_path_to(current)
+	if not __inputs.erase(np):
+		current.set_pressed_no_signal(on)
+	
 	__cursor[__cursor.size() - 1] += 1 # Next node
 
 	return current.button_pressed
@@ -120,7 +122,11 @@ func checkbox(on: bool, text: String = "") -> bool:
 		__parent.add_child(check)
 		current = check
 
-	current.button_pressed = __inputs.get(self.get_path_to(current), {}).get("value", on)
+	var np := self.get_path_to(current)
+	if not __inputs.erase(np):
+		current.set_pressed_no_signal(on)
+		
+		
 	__cursor[__cursor.size() - 1] += 1 # Next node
 
 	return current.button_pressed

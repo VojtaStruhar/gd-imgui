@@ -49,13 +49,17 @@ Some features have different names to be familiar to Godot developers._
   - [x] Text field
   - [x] Combo box (OptionButton)
   - [x] Toggle
-  - [ ] Checkbox
+  - [x] Checkbox
   - [x] Separators
   - [ ] Sliders
   - [ ] Text area
   - [ ] Color picker
 - [ ] Styling
   - [ ] [Theme variations](https://docs.godotengine.org/en/stable/tutorials/ui/gui_theme_type_variations.html)
+  - [ ] Common Theme overrides
+    - [ ] Separation
+    - [ ] Font size
+    - [ ] Font color
   - [ ] Minimum Control size
   - [ ] Anchor presets / Expand flags
   - [ ] Label styling (text alignment, colors, font size)
