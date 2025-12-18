@@ -91,7 +91,7 @@ func progress_bar(value: float, max_val: float, show_percentage: bool = true) ->
 	__cursor[__cursor.size() - 1] += 1 # Next node
 
 
-func toggle(on: bool, text: String = "") -> bool:
+func toggle(on: bool, text: String = "", enabled: bool = true) -> bool:
 	var current := _get_current_node()
 	if current is not CheckButton:
 		_destroy_rest_of_this_layout_level()
@@ -102,6 +102,7 @@ func toggle(on: bool, text: String = "") -> bool:
 		__parent.add_child(check)
 		current = check
 
+	current.disabled = !enabled
 	var np := self.get_path_to(current)
 	if not __inputs.erase(np):
 		current.set_pressed_no_signal(on)
@@ -178,7 +179,7 @@ func separator_h() -> void:
 	__cursor[__cursor.size() - 1] += 1 # Next node
 
 
-func button(text: String) -> bool:
+func button(text: String, enabled: bool = true) -> bool:
 	var current := _get_current_node()
 	if current is not Button:
 		_destroy_rest_of_this_layout_level()
@@ -188,6 +189,7 @@ func button(text: String) -> bool:
 		__parent.add_child(b)
 		current = b
 
+	current.disabled = !enabled
 	current.text = text
 	var np := self.get_path_to(current)
 
@@ -195,7 +197,7 @@ func button(text: String) -> bool:
 	return __inputs.erase(np)
 
 
-func textfield(text: String) -> String:
+func textfield(text: String, enabled: bool = true) -> String:
 	var current := _get_current_node()
 	if current is not LineEdit:
 		_destroy_rest_of_this_layout_level()
@@ -206,6 +208,7 @@ func textfield(text: String) -> String:
 		__parent.add_child(le)
 		current = le
 	
+	current.editable = enabled
 	var np := self.get_path_to(current)
 	if __inputs.has(np):
 		__inputs.erase(np)
@@ -220,7 +223,7 @@ func textfield(text: String) -> String:
 	return current.text
 
 ## Multiline text field
-func textedit(text: String) -> String:
+func textedit(text: String, enabled: bool = true) -> String:
 	var current := _get_current_node()
 	if current is not TextEdit:
 		_destroy_rest_of_this_layout_level()
@@ -234,7 +237,8 @@ func textedit(text: String) -> String:
 		te.text_changed.connect(_register_textedit_input.bind(te))
 		__parent.add_child(te)
 		current = te
-	
+
+	current.editable = enabled
 	var np := self.get_path_to(current)
 	if __inputs.has(np):
 		__inputs.erase(np)
@@ -249,7 +253,7 @@ func textedit(text: String) -> String:
 	return current.text
 
 
-func dropdown(selected_index: int, options: Array[String]) -> int:
+func dropdown(selected_index: int, options: Array[String], enabled: bool = true) -> int:
 	var current := _get_current_node()
 	if current is not OptionButton:
 		_destroy_rest_of_this_layout_level()
@@ -266,7 +270,7 @@ func dropdown(selected_index: int, options: Array[String]) -> int:
 		else:
 			current.add_item(text)
 
-	var np = self.get_path_to(current)
+	var np := self.get_path_to(current)
 	if not __inputs.erase(np): # Means that there is no input
 		(current as OptionButton).selected = selected_index
 
@@ -275,7 +279,7 @@ func dropdown(selected_index: int, options: Array[String]) -> int:
 	return current.selected
 	
 	
-func spinbox(value: int, min_val: int, max_val: int, step: int = 1) -> int:
+func spinbox(value: int, min_val: int, max_val: int, step: int = 1, enabled: bool = true) -> int:
 	var current := _get_current_node()
 	if current is not SpinBox:
 		_destroy_rest_of_this_layout_level()
@@ -285,11 +289,12 @@ func spinbox(value: int, min_val: int, max_val: int, step: int = 1) -> int:
 		__parent.add_child(sb)
 		current = sb
 	
+	current.editable = enabled
 	current.min_value = min_val
 	current.max_value = max_val
 	current.step = step
 	
-	var np = self.get_path_to(current)
+	var np := self.get_path_to(current)
 	if not __inputs.erase(np): # Means that there is no input
 		current.set_value_no_signal(value)
 
@@ -297,7 +302,7 @@ func spinbox(value: int, min_val: int, max_val: int, step: int = 1) -> int:
 
 	return current.value
 
-func slider_h(value: float, min_val: float, max_val: float, step: float = 1) -> float:
+func slider_h(value: float, min_val: float, max_val: float, step: float = 1, enabled: bool = true) -> float:
 	var current := _get_current_node()
 	if current is not HSlider:
 		_destroy_rest_of_this_layout_level()
@@ -310,6 +315,7 @@ func slider_h(value: float, min_val: float, max_val: float, step: float = 1) -> 
 		__parent.add_child(hs)
 		current = hs
 	
+	current.editable = enabled
 	current.min_value = min_val
 	current.max_value = max_val
 	current.step = step
@@ -321,7 +327,7 @@ func slider_h(value: float, min_val: float, max_val: float, step: float = 1) -> 
 
 	return current.value
 
-func slider_v(value: float, min_val: float, max_val: float, step: float = 1) -> float:
+func slider_v(value: float, min_val: float, max_val: float, step: float = 1, enabled: bool = true) -> float:
 	var current := _get_current_node()
 	if current is not VSlider:
 		_destroy_rest_of_this_layout_level()
@@ -334,6 +340,7 @@ func slider_v(value: float, min_val: float, max_val: float, step: float = 1) -> 
 		__parent.add_child(vs)
 		current = vs
 	
+	current.editable = enabled
 	current.min_value = min_val
 	current.max_value = max_val
 	current.step = step

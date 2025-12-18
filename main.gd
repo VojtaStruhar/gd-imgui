@@ -17,6 +17,7 @@ var probabilities: Dictionary[String, float] = {
 
 var user_name: String = ""
 var user_bio: String = ""
+var user_logged_in: bool = true
 
 @onready var timer := Timer.new()
 @onready var g: ImGui = $Imgui
@@ -91,10 +92,6 @@ func _game_tab() -> void:
 	
 	if g.tab("Configuration"):
 		g.begin_vbox()
-		g.begin_grid(2)
-		g.label("Server address:")
-		server = g.textfield(server)
-		g.end_grid()
 		
 		g.separator()
 		
@@ -113,6 +110,34 @@ func _game_tab() -> void:
 		g.end_margin()
 		g.end_panel()
 		g.end_vbox()
+	
+	if g.tab("Online"):
+		g.begin_vbox()
+		
+		g.begin_grid(2)
+		g.label("Connected to server:")
+		g.label("Yes" if server else "No")
+		g.label("User logged in:")
+		g.label("Yes" if user_logged_in else "No")
+		g.end_grid()
+		
+		if g.button("Disconnect from server", server != ""):
+			user_logged_in = false
+			server = ""
+		if g.button("Log out", server and user_logged_in):
+			user_logged_in = false
+		if g.button("Reconnect", server != "" and user_logged_in == false):
+			user_logged_in = true
+		
+		g.separator()
+		
+		g.begin_grid(2)
+		g.label("Server address:")
+		server = g.textfield(server)
+		g.end_grid()
+		
+		g.end_vbox()
+		
 	
 	g.end_margin()
 	g.end_tabs()
