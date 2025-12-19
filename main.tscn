@@ -1,5 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://bv12a7irye02g"]
+[gd_scene load_steps=4 format=3 uid="uid://bv12a7irye02g"]
 
+[ext_resource type="Theme" uid="uid://d12r2lm4y2qr4" path="res://main_theme.tres" id="1_h2yge"]
 [ext_resource type="Script" uid="uid://dn82ykykp56fk" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="Script" uid="uid://bo18f7fx555fw" path="res://imgui.gd" id="2_0xm2m"]
 
@@ -10,6 +11,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_h2yge")
 script = ExtResource("1_ig7tw")
 
 [node name="Imgui" type="Control" parent="."]

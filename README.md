@@ -56,7 +56,7 @@ Some features have different names to be familiar to Godot developers._
   - [ ] Color picker
 - [ ] Styling
   - [x] Enabled / Disabled inputs
-  - [ ] [Theme variations](https://docs.godotengine.org/en/stable/tutorials/ui/gui_theme_type_variations.html)
+  - [x] [Theme variations](https://docs.godotengine.org/en/stable/tutorials/ui/gui_theme_type_variations.html)
   - [ ] Common Theme overrides
     - [ ] Separation
     - [ ] Font size

@@ -5,6 +5,7 @@ var __parent: Control = self
 var __inputs: Dictionary[NodePath, Dictionary] = { }
 ## Call depth
 var __cursor: Array[int] = [0]
+var __theme_variations_stack: Array[String] = []
 
 
 func _ready() -> void:
@@ -17,7 +18,20 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	assert(__cursor.size() == 1)
 	__cursor[0] = 0
+	if not __theme_variations_stack.is_empty():
+		push_warning("Leftover theme variations in the stack: " + str(__theme_variations_stack))
+		__theme_variations_stack.clear()
 
+## All [Control]s created with this ImGui will receive this [property Control.theme_type_variation]
+## until it is popped with [method ImGui.pop_variation]. [br]
+func push_variation(theme_variation: String) -> void:
+	__theme_variations_stack.append(theme_variation)
+
+func pop_variation(count: int = 1) -> void:
+	assert(count >= 1)
+	for i in count:
+		assert(not __theme_variations_stack.is_empty())
+		__theme_variations_stack.pop_back()
 
 func begin_tabs() -> void:
 	begin_vbox()
@@ -32,7 +46,9 @@ func begin_tabs() -> void:
 		_destroy_rest_of_this_layout_level()
 		var tb := TabBar.new()
 		__parent.add_child(tb)
-
+		current = tb
+	
+	_apply_styling(current)
 	__cursor[__cursor.size() - 1] += 1 # Next node
 
 	begin_panel()
@@ -83,6 +99,7 @@ func progress_bar(value: float, max_val: float, show_percentage: bool = true) ->
 		__parent.add_child(pb)
 		current = pb
 
+	_apply_styling(current)
 	current.min_value = 0
 	current.max_value = max_val
 	current.value = value
@@ -102,6 +119,7 @@ func toggle(on: bool, text: String = "", enabled: bool = true) -> bool:
 		__parent.add_child(check)
 		current = check
 
+	_apply_styling(current)
 	current.disabled = !enabled
 	var np := self.get_path_to(current)
 	if not __inputs.erase(np):
@@ -123,6 +141,7 @@ func checkbox(on: bool, text: String = "") -> bool:
 		__parent.add_child(check)
 		current = check
 
+	_apply_styling(current)
 	var np := self.get_path_to(current)
 	if not __inputs.erase(np):
 		current.set_pressed_no_signal(on)
@@ -143,6 +162,7 @@ func label(text: String) -> void:
 		__parent.add_child(l)
 		current = l
 
+	_apply_styling(current)
 	current.text = text
 	__cursor[__cursor.size() - 1] += 1 # Next node
 
@@ -164,6 +184,7 @@ func separator_v() -> void:
 		__parent.add_child(vs)
 		current = vs
 
+	_apply_styling(current)
 	__cursor[__cursor.size() - 1] += 1 # Next node
 
 
@@ -176,6 +197,7 @@ func separator_h() -> void:
 		__parent.add_child(hs)
 		current = hs
 
+	_apply_styling(current)
 	__cursor[__cursor.size() - 1] += 1 # Next node
 
 
@@ -189,6 +211,7 @@ func button(text: String, enabled: bool = true) -> bool:
 		__parent.add_child(b)
 		current = b
 
+	_apply_styling(current)
 	current.disabled = !enabled
 	current.text = text
 	var np := self.get_path_to(current)
@@ -207,7 +230,8 @@ func textfield(text: String, enabled: bool = true) -> String:
 		le.text_changed.connect(_register_textfield_input.bind(le))
 		__parent.add_child(le)
 		current = le
-	
+
+	_apply_styling(current)
 	current.editable = enabled
 	var np := self.get_path_to(current)
 	if __inputs.has(np):
@@ -238,6 +262,7 @@ func textedit(text: String, enabled: bool = true) -> String:
 		__parent.add_child(te)
 		current = te
 
+	_apply_styling(current)
 	current.editable = enabled
 	var np := self.get_path_to(current)
 	if __inputs.has(np):
@@ -270,6 +295,9 @@ func dropdown(selected_index: int, options: Array[String], enabled: bool = true)
 		else:
 			current.add_item(text)
 
+	_apply_styling(current)
+	current.disabled = !enabled 
+
 	var np := self.get_path_to(current)
 	if not __inputs.erase(np): # Means that there is no input
 		(current as OptionButton).selected = selected_index
@@ -288,7 +316,8 @@ func spinbox(value: int, min_val: int, max_val: int, step: int = 1, enabled: boo
 		sb.value_changed.connect(_register_spinbox_change.bind(sb))
 		__parent.add_child(sb)
 		current = sb
-	
+
+	_apply_styling(current)
 	current.editable = enabled
 	current.min_value = min_val
 	current.max_value = max_val
@@ -314,7 +343,8 @@ func slider_h(value: float, min_val: float, max_val: float, step: float = 1, ena
 		hs.value_changed.connect(_register_spinbox_change.bind(hs))
 		__parent.add_child(hs)
 		current = hs
-	
+
+	_apply_styling(current)
 	current.editable = enabled
 	current.min_value = min_val
 	current.max_value = max_val
@@ -339,7 +369,8 @@ func slider_v(value: float, min_val: float, max_val: float, step: float = 1, ena
 		vs.value_changed.connect(_register_spinbox_change.bind(vs))
 		__parent.add_child(vs)
 		current = vs
-	
+
+	_apply_styling(current)
 	current.editable = enabled
 	current.min_value = min_val
 	current.max_value = max_val
@@ -355,15 +386,16 @@ func slider_v(value: float, min_val: float, max_val: float, step: float = 1, ena
 
 
 func begin_vbox() -> void:
-	var c := _get_current_node()
-	if c is not VBoxContainer:
+	var current := _get_current_node()
+	if current is not VBoxContainer:
 		_destroy_rest_of_this_layout_level()
 		var vbox := VBoxContainer.new()
 		vbox.name = str(__cursor).validate_node_name()
 		__parent.add_child(vbox)
-		c = vbox
+		current = vbox
 
-	__parent = c
+	_apply_styling(current)
+	__parent = current
 	__cursor.append(0)
 
 
@@ -377,24 +409,30 @@ func end_vbox() -> void:
 	__cursor[__cursor.size() - 1] += 1
 
 
-func begin_margin(margin: int) -> void:
+func begin_margin(margin: int = -1) -> void:
 	begin_margin_v(Vector4i.ONE * margin)
 
-func begin_margin_v(margin:  Vector4i) -> void:
-	var c := _get_current_node()
-	if c is not MarginContainer:
+func begin_margin_v(margin: Vector4i) -> void:
+	var current := _get_current_node()
+	if current is not MarginContainer:
 		_destroy_rest_of_this_layout_level()
 		var mc := MarginContainer.new()
 		mc.name = str(__cursor).validate_node_name()
 		__parent.add_child(mc)
-		c = mc
+		current = mc
+	
+	_apply_styling(current)
+	
+	if margin.x >= 0: current.add_theme_constant_override(&"margin_left", margin.x)
+	else: current.remove_theme_constant_override(&"margin_left")
+	if margin.y >= 0: current.add_theme_constant_override(&"margin_top", margin.y)
+	else: current.remove_theme_constant_override(&"margin_top")
+	if margin.z >= 0: current.add_theme_constant_override(&"margin_right", margin.z)
+	else: current.remove_theme_constant_override(&"margin_right")
+	if margin.w >= 0: current.add_theme_constant_override(&"margin_bottom", margin.w)
+	else: current.remove_theme_constant_override(&"margin_bottom")
 
-	c.add_theme_constant_override(&"margin_left", margin.x)
-	c.add_theme_constant_override(&"margin_top", margin.y)
-	c.add_theme_constant_override(&"margin_right", margin.z)
-	c.add_theme_constant_override(&"margin_bottom", margin.w)
-
-	__parent = c
+	__parent = current
 	__cursor.append(0)
 
 
@@ -410,15 +448,16 @@ func end_margin() -> void:
 
 
 func begin_hbox() -> void:
-	var c := _get_current_node()
-	if c is not HBoxContainer:
+	var current := _get_current_node()
+	if current is not HBoxContainer:
 		_destroy_rest_of_this_layout_level()
 		var vbox := HBoxContainer.new()
 		vbox.name = str(__cursor).validate_node_name()
 		__parent.add_child(vbox)
-		c = vbox
-
-	__parent = c
+		current = vbox
+	
+	_apply_styling(current)
+	__parent = current
 	__cursor.append(0)
 
 
@@ -433,15 +472,16 @@ func end_hbox() -> void:
 
 
 func begin_panel() -> void:
-	var c := _get_current_node()
-	if c is not PanelContainer:
+	var current := _get_current_node()
+	if current is not PanelContainer:
 		_destroy_rest_of_this_layout_level()
 		var grid := PanelContainer.new()
 		grid.name = str(__cursor).validate_node_name()
 		__parent.add_child(grid)
-		c = grid
+		current = grid
 
-	__parent = c
+	_apply_styling(current)
+	__parent = current
 	__cursor.append(0)
 
 
@@ -456,16 +496,17 @@ func end_panel() -> void:
 
 
 func begin_grid(columns: int) -> void:
-	var c := _get_current_node()
-	if c is not GridContainer:
+	var current := _get_current_node()
+	if current is not GridContainer:
 		_destroy_rest_of_this_layout_level()
 		var grid := GridContainer.new()
 		grid.name = str(__cursor).validate_node_name()
 		__parent.add_child(grid)
-		c = grid
+		current = grid
 
-	c.columns = columns
-	__parent = c
+	_apply_styling(current)
+	current.columns = columns
+	__parent = current
 	__cursor.append(0)
 
 
@@ -524,3 +565,6 @@ func _destroy_rest_of_this_layout_level() -> void:
 		var child := p.get_child(-1)
 		p.remove_child(child)
 		child.queue_free()
+
+func _apply_styling(element: Control) -> void:
+	element.theme_type_variation = "" if __theme_variations_stack.is_empty() else __theme_variations_stack.back()

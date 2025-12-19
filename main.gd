@@ -135,7 +135,10 @@ func _game_tab() -> void:
 		g.label("Server address:")
 		server = g.textfield(server)
 		g.end_grid()
-		
+		if server == "":
+			g.push_variation(&"Label_Error")
+			g.label("Server address must not be empty!")
+			g.pop_variation()
 		g.end_vbox()
 		
 	
