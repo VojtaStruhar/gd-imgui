@@ -1,12 +1,16 @@
 class_name ImGui
-extends Control
+extends Container
 
 var __parent: Control = self
 var __inputs: Dictionary[NodePath, Dictionary] = { }
 ## Call depth
 var __cursor: Array[int] = [0]
 var __theme_variations_stack: Array[String] = []
+var __min_size_stack: Array[Vector2] = []
 
+@export_group("Defaults", "_default")
+@export var _default_slider_v_height: float = 50
+@export var _default_slider_h_width: float = 50
 
 func _ready() -> void:
 	for child in get_children():
@@ -22,22 +26,48 @@ func _process(_delta: float) -> void:
 		push_warning("Leftover theme variations in the stack: " + str(__theme_variations_stack))
 		__theme_variations_stack.clear()
 
-## All [Control]s created with this ImGui will receive this [property Control.theme_type_variation]
-## until it is popped with [method ImGui.pop_variation]. [br]
+## All future [Control]s created with this ImGui will receive this 
+## [member Control.theme_type_variation] until it is popped with [method ImGui.pop_variation].
 func push_variation(theme_variation: String) -> void:
 	__theme_variations_stack.append(theme_variation)
 
 func pop_variation(count: int = 1) -> void:
 	assert(count >= 1)
 	for i in count:
-		assert(not __theme_variations_stack.is_empty())
+		assert(not __theme_variations_stack.is_empty(), "Attempted to pop empty stack")
 		__theme_variations_stack.pop_back()
+
+## All future [Control]s created with this ImGui will get [param min_size] assigned to
+## [member Control.custom_minimum_size] until it is popped with [method ImGui.pop_minimum_size].
+func push_min_size(min_width: float, min_height: float) -> void:
+	push_min_size_v(Vector2(min_width, min_height))
+
+## Underlying implementation for [method ImGui.push_min_size], [method ImGui.push_min_height] 
+## and [method ImGui.push_min_width].
+func push_min_size_v(min_size: Vector2) -> void:
+	__min_size_stack.append(min_size)
+
+## Convenience method for [method ImGui.push_min_size]
+func push_min_height(min_height: float) -> void:
+	push_min_size_v(Vector2(0, min_height))
+
+## Convenience method for [method ImGui.push_min_size]
+func push_min_width(min_width: float) -> void:
+	push_min_size_v(Vector2(min_width, 0))
+
+func pop_minimum_size(count: int = 1) -> void:
+	assert(count >= 1)
+	for i in count:
+		assert(not __min_size_stack.is_empty(), "Attempted to pop empty stack")
+		__min_size_stack.pop_back()
+
 
 func begin_tabs() -> void:
 	begin_vbox()
 	# TODO: Refactor styling
+	if __parent.custom_minimum_size.is_zero_approx():
+		__parent.custom_minimum_size.x = 400
 	__parent.add_theme_constant_override("separation", 0)
-	__parent.custom_minimum_size.x = 400
 	__parent.set_anchors_preset(Control.PRESET_FULL_RECT)
 	__parent.alignment = BoxContainer.ALIGNMENT_BEGIN
 
@@ -336,7 +366,7 @@ func slider_h(value: float, min_val: float, max_val: float, step: float = 1, ena
 	if current is not HSlider:
 		_destroy_rest_of_this_layout_level()
 		var hs := HSlider.new()
-		hs.custom_minimum_size.x = 150
+		hs.custom_minimum_size.x = _default_slider_h_width
 		hs.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		hs.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		hs.name = str(__cursor).validate_node_name()
@@ -344,7 +374,11 @@ func slider_h(value: float, min_val: float, max_val: float, step: float = 1, ena
 		__parent.add_child(hs)
 		current = hs
 
+	var enforce_minimum_height: bool = __min_size_stack.is_empty() or (__min_size_stack.back().x < _default_slider_h_width)
+	if enforce_minimum_height: push_min_width(_default_slider_h_width)
 	_apply_styling(current)
+	if enforce_minimum_height: pop_minimum_size()
+
 	current.editable = enabled
 	current.min_value = min_val
 	current.max_value = max_val
@@ -357,12 +391,13 @@ func slider_h(value: float, min_val: float, max_val: float, step: float = 1, ena
 
 	return current.value
 
+##
 func slider_v(value: float, min_val: float, max_val: float, step: float = 1, enabled: bool = true) -> float:
 	var current := _get_current_node()
 	if current is not VSlider:
 		_destroy_rest_of_this_layout_level()
 		var vs := VSlider.new()
-		vs.custom_minimum_size.y = 150
+		vs.custom_minimum_size.y = _default_slider_v_height
 		vs.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 		vs.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		vs.name = str(__cursor).validate_node_name()
@@ -370,7 +405,11 @@ func slider_v(value: float, min_val: float, max_val: float, step: float = 1, ena
 		__parent.add_child(vs)
 		current = vs
 
+	var enforce_minimum_height: bool = __min_size_stack.is_empty() or (__min_size_stack.back().y < _default_slider_v_height)
+	if enforce_minimum_height: push_min_height(_default_slider_v_height)
 	_apply_styling(current)
+	if enforce_minimum_height: pop_minimum_size()
+	
 	current.editable = enabled
 	current.min_value = min_val
 	current.max_value = max_val
@@ -568,3 +607,4 @@ func _destroy_rest_of_this_layout_level() -> void:
 
 func _apply_styling(element: Control) -> void:
 	element.theme_type_variation = "" if __theme_variations_stack.is_empty() else __theme_variations_stack.back()
+	element.custom_minimum_size = Vector2.ZERO if __min_size_stack.is_empty() else __min_size_stack.back()
