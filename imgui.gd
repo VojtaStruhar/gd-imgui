@@ -207,6 +207,21 @@ func label(text: String, alignment: HorizontalAlignment = HorizontalAlignment.HO
 	current.text = text
 	__cursor[__cursor.size() - 1] += 1 # Next node
 
+func texture_rect(texture: Texture2D) -> void:
+	var current := _get_current_node()
+	if current is not TextureRect:
+		_destroy_rest_of_this_layout_level()
+		var trect := TextureRect.new()
+		trect.name = str(__cursor).validate_node_name()
+		__parent.add_child(trect)
+		current = trect
+
+	_apply_styling(current)
+	current.texture = texture
+	current.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	
+	__cursor[__cursor.size() - 1] += 1 # Next node
+
 func separator() -> void:
 	match __parent.get_class():
 		&"HBoxContainer", &"HFlowContainer":
@@ -426,7 +441,7 @@ func slider_h(value: float, min_val: float, max_val: float, step: float = 0.1, e
 
 	return current.value
 
-##
+
 func slider_v(value: float, min_val: float, max_val: float, step: float = 0.1, enabled: bool = true) -> float:
 	var current := _get_current_node()
 	if current is not VSlider:

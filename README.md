@@ -46,7 +46,7 @@ Some features have different names to be familiar to Godot developers._
   - [ ] Aspect ratio container
 - [ ] Display information
   - [x] Label
-  - [ ] TextureRect
+  - [x] TextureRect
   - [ ] ColorRect
 - [ ] Input
   - [x] Button
@@ -72,5 +72,6 @@ Some features have different names to be familiar to Godot developers._
   - [ ] Rich text label
   - [ ] Container spacing
   - [ ] Tooltips
+  - [ ] Texture Rect - texture stretch
 - [ ] Convenience features
   - Develop commonly used widgets by composing the basics.

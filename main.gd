@@ -19,6 +19,8 @@ var user_name: String = ""
 var user_bio: String = ""
 var user_logged_in: bool = true
 
+const ICON: Texture2D = preload("uid://bnoxb3l0cob4r")
+
 @onready var timer := Timer.new()
 @onready var g: ImGui = $Imgui
 
@@ -90,6 +92,8 @@ func _game_tab() -> void:
 		
 		show_advanced = g.toggle(show_advanced, "Show Advanced")
 		show_advanced = g.checkbox(show_advanced, "Show Advanced")
+		
+		g.texture_rect(ICON)
 		g.end_vbox()
 	
 	if g.tab("Configuration"):
