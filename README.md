@@ -43,6 +43,11 @@ Some features have different names to be familiar to Godot developers._
   - [ ] Split container
   - [ ] Trees
   - [ ] Draggable windows (similar to Dear ImGui)
+  - [ ] Aspect ratio container
+- [ ] Display information
+  - [x] Label
+  - [ ] TextureRect
+  - [ ] ColorRect
 - [ ] Input
   - [x] Button
   - [x] Number field
