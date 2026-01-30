@@ -372,7 +372,31 @@ func spinbox(value: int, min_val: int, max_val: int, step: int = 1, enabled: boo
 
 	return current.value
 
-func slider_h(value: float, min_val: float, max_val: float, step: float = 1, enabled: bool = true) -> float:
+func spinboxf(value: float, min_val: float, max_val: float, step: float = 0.01, enabled: bool = true) -> float:
+	var current := _get_current_node()
+	if current is not SpinBox:
+		_destroy_rest_of_this_layout_level()
+		var sb := SpinBox.new()
+		sb.name = str(__cursor).validate_node_name()
+		sb.value_changed.connect(_register_spinbox_change.bind(sb))
+		__parent.add_child(sb)
+		current = sb
+
+	_apply_styling(current)
+	current.editable = enabled
+	current.min_value = min_val
+	current.max_value = max_val
+	current.step = step
+	
+	var np := self.get_path_to(current)
+	if not __inputs.erase(np): # Means that there is no input
+		current.set_value_no_signal(value)
+
+	__cursor[__cursor.size() - 1] += 1 # Next node
+
+	return current.value
+
+func slider_h(value: float, min_val: float, max_val: float, step: float = 0.1, enabled: bool = true) -> float:
 	var current := _get_current_node()
 	if current is not HSlider:
 		_destroy_rest_of_this_layout_level()
@@ -403,7 +427,7 @@ func slider_h(value: float, min_val: float, max_val: float, step: float = 1, ena
 	return current.value
 
 ##
-func slider_v(value: float, min_val: float, max_val: float, step: float = 1, enabled: bool = true) -> float:
+func slider_v(value: float, min_val: float, max_val: float, step: float = 0.1, enabled: bool = true) -> float:
 	var current := _get_current_node()
 	if current is not VSlider:
 		_destroy_rest_of_this_layout_level()
