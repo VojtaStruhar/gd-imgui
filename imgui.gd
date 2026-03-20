@@ -9,6 +9,7 @@ var __theme_variations_stack: Array[String] = []
 # Applies minimum size to ALL elements, until popped.
 var __min_size_stack: Array[Vector2] = []
 var __next_min_size_stack: Array[Vector2] = []
+var __alignment_horizontal_stack: Array[SizeFlags] = []
 
 
 @export_group("Defaults", "_default")
@@ -39,6 +40,15 @@ func pop_variation(count: int = 1) -> void:
 	for i in count:
 		assert(not __theme_variations_stack.is_empty(), "Attempted to pop empty stack")
 		__theme_variations_stack.pop_back()
+
+func push_alignment_h(align: SizeFlags) -> void:
+	__alignment_horizontal_stack.append(align)
+
+func pop_alignment_h(count: int = 1) -> void:
+	assert(count >= 1)
+	for i in count:
+		assert(not __alignment_horizontal_stack.is_empty(), "Attempted to pop empty stack")
+		__alignment_horizontal_stack.pop_back()
 
 ## Set minimum size of the [i]next[/i] element that will be created. Also see [method ImGui.push_min_size].
 func next_min_size(min_width: float, min_height: float) -> void:
@@ -441,8 +451,8 @@ func slider_h(value: float, min_val: float, max_val: float, step: float = 0.1, e
 
 	return current.value
 
-
-func slider_v(value: float, min_val: float, max_val: float, step: float = 0.1, enabled: bool = true) -> float:
+##
+func slider_v(value: float, min_val: float, max_val: float, step: float = 1, enabled: bool = true) -> float:
 	var current := _get_current_node()
 	if current is not VSlider:
 		_destroy_rest_of_this_layout_level()
@@ -661,3 +671,5 @@ func _apply_styling(element: Control) -> void:
 		element.custom_minimum_size = __next_min_size_stack.pop_back()
 	else:
 		element.custom_minimum_size = Vector2.ZERO if __min_size_stack.is_empty() else __min_size_stack.back()
+
+	element.size_flags_horizontal = Control.SIZE_FILL if __alignment_horizontal_stack.is_empty() else __alignment_horizontal_stack.back()
