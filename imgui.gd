@@ -269,7 +269,7 @@ func separator_h() -> void:
 
 func button(text: String, enabled: bool = true) -> bool:
 	var current := _get_current_node()
-	if current is not Button:
+	if current == null or current.get_class() != "Button":
 		_destroy_rest_of_this_layout_level()
 		var b := Button.new()
 		b.name = str(__cursor).validate_node_name()
