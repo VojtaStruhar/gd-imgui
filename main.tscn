@@ -1,10 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://bv12a7irye02g"]
+[gd_scene format=3 uid="uid://bv12a7irye02g"]
 
 [ext_resource type="Theme" uid="uid://d12r2lm4y2qr4" path="res://main_theme.tres" id="1_h2yge"]
 [ext_resource type="Script" uid="uid://dn82ykykp56fk" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="Script" uid="uid://bo18f7fx555fw" path="res://imgui.gd" id="2_0xm2m"]
 
-[node name="Main" type="Control"]
+[node name="Main" type="Control" unique_id=227778954]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,6 +14,6 @@ grow_vertical = 2
 theme = ExtResource("1_h2yge")
 script = ExtResource("1_ig7tw")
 
-[node name="Imgui" type="Container" parent="."]
+[node name="Imgui" type="Container" parent="." unique_id=1656137608]
 layout_mode = 1
 script = ExtResource("2_0xm2m")

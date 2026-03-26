@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://b17lh4kswdaeo"]
+[gd_scene format=3 uid="uid://b17lh4kswdaeo"]
 
 [ext_resource type="Script" uid="uid://cvmuugqgy5vtp" path="res://test_scenes/cube_manipulator.gd" id="1_bjucw"]
 [ext_resource type="Script" uid="uid://bo18f7fx555fw" path="res://imgui.gd" id="2_3shom"]
@@ -21,810 +21,810 @@ glow_enabled = true
 [sub_resource type="BoxMesh" id="BoxMesh_bjucw"]
 size = Vector3(0.15, 0.15, 0.15)
 
-[node name="CubeManipulator" type="Node3D"]
+[node name="CubeManipulator" type="Node3D" unique_id=468152222]
 script = ExtResource("1_bjucw")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=549784225]
 environment = SubResource("Environment_0ih23")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=710640908]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
 shadow_enabled = true
 
-[node name="Cube" type="MeshInstance3D" parent="."]
+[node name="Cube" type="MeshInstance3D" parent="." unique_id=1378265604]
 mesh = SubResource("BoxMesh_mj3qu")
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="Camera3D" type="Camera3D" parent="." unique_id=308613669]
 transform = Transform3D(0.82759136, -0.24296615, 0.5060237, 0, 0.9014711, 0.4328393, -0.56133103, -0.35821408, 0.7460497, 2.024066, 1.7313731, 2.984207)
 
-[node name="GridIndicator" type="Node3D" parent="."]
+[node name="GridIndicator" type="Node3D" parent="." unique_id=477938223]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="GridIndicator" unique_id=1157804130]
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="GridIndicator" unique_id=1078847344]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="GridIndicator" unique_id=852572876]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D4" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="GridIndicator" unique_id=1893517318]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 1)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D5" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="GridIndicator" unique_id=835456532]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D6" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="GridIndicator" unique_id=563957888]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D7" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D7" type="MeshInstance3D" parent="GridIndicator" unique_id=1813484189]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 2)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D8" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D8" type="MeshInstance3D" parent="GridIndicator" unique_id=1775114017]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 3)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D9" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D9" type="MeshInstance3D" parent="GridIndicator" unique_id=1536659400]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D10" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D10" type="MeshInstance3D" parent="GridIndicator" unique_id=1522666054]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 1)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D11" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D11" type="MeshInstance3D" parent="GridIndicator" unique_id=510803949]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D12" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D12" type="MeshInstance3D" parent="GridIndicator" unique_id=648995388]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D13" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D13" type="MeshInstance3D" parent="GridIndicator" unique_id=468633679]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 2)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D14" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D14" type="MeshInstance3D" parent="GridIndicator" unique_id=1964965253]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 3)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D17" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D17" type="MeshInstance3D" parent="GridIndicator" unique_id=1106593441]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 0)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D18" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D18" type="MeshInstance3D" parent="GridIndicator" unique_id=150077814]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 1)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D19" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D19" type="MeshInstance3D" parent="GridIndicator" unique_id=1242961151]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 2)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D20" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D20" type="MeshInstance3D" parent="GridIndicator" unique_id=1303119821]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 3)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D21" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D21" type="MeshInstance3D" parent="GridIndicator" unique_id=1795030403]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 0)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D22" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D22" type="MeshInstance3D" parent="GridIndicator" unique_id=1579311655]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 1)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D23" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D23" type="MeshInstance3D" parent="GridIndicator" unique_id=1860101431]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 2)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D24" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D24" type="MeshInstance3D" parent="GridIndicator" unique_id=1375426540]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 3)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D25" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D25" type="MeshInstance3D" parent="GridIndicator" unique_id=445483202]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D26" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D26" type="MeshInstance3D" parent="GridIndicator" unique_id=841487839]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 1)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D27" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D27" type="MeshInstance3D" parent="GridIndicator" unique_id=370189429]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 2)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D28" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D28" type="MeshInstance3D" parent="GridIndicator" unique_id=1021063850]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 3)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D15" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D15" type="MeshInstance3D" parent="GridIndicator" unique_id=401126483]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 2)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D16" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D16" type="MeshInstance3D" parent="GridIndicator" unique_id=2111804611]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 3)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D29" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D29" type="MeshInstance3D" parent="GridIndicator" unique_id=1513940778]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D30" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D30" type="MeshInstance3D" parent="GridIndicator" unique_id=1065503384]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -3)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D31" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D31" type="MeshInstance3D" parent="GridIndicator" unique_id=439737479]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D32" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D32" type="MeshInstance3D" parent="GridIndicator" unique_id=1968753376]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D33" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D33" type="MeshInstance3D" parent="GridIndicator" unique_id=1994812931]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -2)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D34" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D34" type="MeshInstance3D" parent="GridIndicator" unique_id=1993609491]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -1)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D35" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D35" type="MeshInstance3D" parent="GridIndicator" unique_id=1481841952]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -3)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D36" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D36" type="MeshInstance3D" parent="GridIndicator" unique_id=1418160108]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -3)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D37" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D37" type="MeshInstance3D" parent="GridIndicator" unique_id=1846050541]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -2)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D38" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D38" type="MeshInstance3D" parent="GridIndicator" unique_id=889813856]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -1)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D39" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D39" type="MeshInstance3D" parent="GridIndicator" unique_id=154625434]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -3)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D40" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D40" type="MeshInstance3D" parent="GridIndicator" unique_id=721297624]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -2)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D41" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D41" type="MeshInstance3D" parent="GridIndicator" unique_id=671939568]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -1)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D42" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D42" type="MeshInstance3D" parent="GridIndicator" unique_id=1785588433]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -3)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D43" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D43" type="MeshInstance3D" parent="GridIndicator" unique_id=2070068174]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -2)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D44" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D44" type="MeshInstance3D" parent="GridIndicator" unique_id=1734989173]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -1)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D45" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D45" type="MeshInstance3D" parent="GridIndicator" unique_id=1688102211]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -3)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D46" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D46" type="MeshInstance3D" parent="GridIndicator" unique_id=1256139248]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -2)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D47" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D47" type="MeshInstance3D" parent="GridIndicator" unique_id=1792700834]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -1)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D48" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D48" type="MeshInstance3D" parent="GridIndicator" unique_id=1883013955]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -2)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D49" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D49" type="MeshInstance3D" parent="GridIndicator" unique_id=797584393]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -1)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D50" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D50" type="MeshInstance3D" parent="GridIndicator" unique_id=1839252103]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 0)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D51" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D51" type="MeshInstance3D" parent="GridIndicator" unique_id=398155033]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 1)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D52" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D52" type="MeshInstance3D" parent="GridIndicator" unique_id=474391991]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, 0)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D53" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D53" type="MeshInstance3D" parent="GridIndicator" unique_id=1995755531]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, 1)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D54" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D54" type="MeshInstance3D" parent="GridIndicator" unique_id=1876850618]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 2)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D55" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D55" type="MeshInstance3D" parent="GridIndicator" unique_id=1546625139]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 3)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D56" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D56" type="MeshInstance3D" parent="GridIndicator" unique_id=195776831]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, 2)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D57" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D57" type="MeshInstance3D" parent="GridIndicator" unique_id=2045005334]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, 3)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D58" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D58" type="MeshInstance3D" parent="GridIndicator" unique_id=1849259561]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D59" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D59" type="MeshInstance3D" parent="GridIndicator" unique_id=2082792941]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 1)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D60" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D60" type="MeshInstance3D" parent="GridIndicator" unique_id=902990426]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, 0)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D61" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D61" type="MeshInstance3D" parent="GridIndicator" unique_id=478712177]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, 1)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D62" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D62" type="MeshInstance3D" parent="GridIndicator" unique_id=370889972]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 2)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D63" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D63" type="MeshInstance3D" parent="GridIndicator" unique_id=1704565052]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 3)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D64" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D64" type="MeshInstance3D" parent="GridIndicator" unique_id=85003913]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 0)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D65" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D65" type="MeshInstance3D" parent="GridIndicator" unique_id=1091816067]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 1)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D66" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D66" type="MeshInstance3D" parent="GridIndicator" unique_id=326884971]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 2)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D67" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D67" type="MeshInstance3D" parent="GridIndicator" unique_id=1058252255]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 3)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D68" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D68" type="MeshInstance3D" parent="GridIndicator" unique_id=467658869]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, 0)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D69" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D69" type="MeshInstance3D" parent="GridIndicator" unique_id=1531064793]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, 1)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D70" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D70" type="MeshInstance3D" parent="GridIndicator" unique_id=1963468995]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, 2)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D71" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D71" type="MeshInstance3D" parent="GridIndicator" unique_id=800959806]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, 3)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D72" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D72" type="MeshInstance3D" parent="GridIndicator" unique_id=2019797052]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 0)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D73" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D73" type="MeshInstance3D" parent="GridIndicator" unique_id=2048561833]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 1)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D74" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D74" type="MeshInstance3D" parent="GridIndicator" unique_id=482158652]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 2)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D75" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D75" type="MeshInstance3D" parent="GridIndicator" unique_id=642346788]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 3)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D76" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D76" type="MeshInstance3D" parent="GridIndicator" unique_id=1455582169]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, 2)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D77" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D77" type="MeshInstance3D" parent="GridIndicator" unique_id=434557040]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, 3)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D78" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D78" type="MeshInstance3D" parent="GridIndicator" unique_id=905742160]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -3)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D79" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D79" type="MeshInstance3D" parent="GridIndicator" unique_id=2009427138]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -3)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D80" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D80" type="MeshInstance3D" parent="GridIndicator" unique_id=631669394]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -2)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D81" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D81" type="MeshInstance3D" parent="GridIndicator" unique_id=1541196681]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -1)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D82" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D82" type="MeshInstance3D" parent="GridIndicator" unique_id=1815048542]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -2)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D83" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D83" type="MeshInstance3D" parent="GridIndicator" unique_id=1899199688]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -1)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D84" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D84" type="MeshInstance3D" parent="GridIndicator" unique_id=1552025272]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -3)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D85" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D85" type="MeshInstance3D" parent="GridIndicator" unique_id=1621721053]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -3)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D86" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D86" type="MeshInstance3D" parent="GridIndicator" unique_id=996867868]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -2)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D87" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D87" type="MeshInstance3D" parent="GridIndicator" unique_id=1776537805]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -1)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D88" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D88" type="MeshInstance3D" parent="GridIndicator" unique_id=1526983361]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, -3)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D89" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D89" type="MeshInstance3D" parent="GridIndicator" unique_id=838291451]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, -2)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D90" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D90" type="MeshInstance3D" parent="GridIndicator" unique_id=1590191087]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, -1)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D91" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D91" type="MeshInstance3D" parent="GridIndicator" unique_id=1682111944]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, -3)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D92" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D92" type="MeshInstance3D" parent="GridIndicator" unique_id=22537024]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, -2)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D93" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D93" type="MeshInstance3D" parent="GridIndicator" unique_id=2072661]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, -1)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D94" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D94" type="MeshInstance3D" parent="GridIndicator" unique_id=1597728314]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -3)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D95" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D95" type="MeshInstance3D" parent="GridIndicator" unique_id=408449713]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -2)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D96" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D96" type="MeshInstance3D" parent="GridIndicator" unique_id=112985426]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -1)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D97" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D97" type="MeshInstance3D" parent="GridIndicator" unique_id=1053381294]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -2)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D98" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D98" type="MeshInstance3D" parent="GridIndicator" unique_id=1569396908]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -1)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D99" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D99" type="MeshInstance3D" parent="GridIndicator" unique_id=607318882]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -7)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D100" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D100" type="MeshInstance3D" parent="GridIndicator" unique_id=1339827151]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D101" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D101" type="MeshInstance3D" parent="GridIndicator" unique_id=1527197317]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -7)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D102" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D102" type="MeshInstance3D" parent="GridIndicator" unique_id=2023032285]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -6)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D103" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D103" type="MeshInstance3D" parent="GridIndicator" unique_id=491973416]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D104" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D104" type="MeshInstance3D" parent="GridIndicator" unique_id=1703817086]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D105" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D105" type="MeshInstance3D" parent="GridIndicator" unique_id=1268641683]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -5)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D106" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D106" type="MeshInstance3D" parent="GridIndicator" unique_id=822133034]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -4)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D107" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D107" type="MeshInstance3D" parent="GridIndicator" unique_id=1548247846]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -7)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D108" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D108" type="MeshInstance3D" parent="GridIndicator" unique_id=1055054050]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -6)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D109" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D109" type="MeshInstance3D" parent="GridIndicator" unique_id=51910006]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -7)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D110" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D110" type="MeshInstance3D" parent="GridIndicator" unique_id=1507482010]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -6)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D111" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D111" type="MeshInstance3D" parent="GridIndicator" unique_id=791324249]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -5)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D112" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D112" type="MeshInstance3D" parent="GridIndicator" unique_id=1469694481]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -4)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D113" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D113" type="MeshInstance3D" parent="GridIndicator" unique_id=966641638]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -7)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D114" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D114" type="MeshInstance3D" parent="GridIndicator" unique_id=1808282680]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -6)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D115" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D115" type="MeshInstance3D" parent="GridIndicator" unique_id=1792262694]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -5)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D116" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D116" type="MeshInstance3D" parent="GridIndicator" unique_id=1425886959]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -4)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D117" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D117" type="MeshInstance3D" parent="GridIndicator" unique_id=1412660957]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -7)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D118" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D118" type="MeshInstance3D" parent="GridIndicator" unique_id=967240437]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -6)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D119" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D119" type="MeshInstance3D" parent="GridIndicator" unique_id=1014956289]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -5)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D120" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D120" type="MeshInstance3D" parent="GridIndicator" unique_id=1616728302]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -4)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D121" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D121" type="MeshInstance3D" parent="GridIndicator" unique_id=530033472]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -7)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D122" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D122" type="MeshInstance3D" parent="GridIndicator" unique_id=1698476080]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -6)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D123" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D123" type="MeshInstance3D" parent="GridIndicator" unique_id=941827055]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -5)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D124" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D124" type="MeshInstance3D" parent="GridIndicator" unique_id=922474052]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -4)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D125" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D125" type="MeshInstance3D" parent="GridIndicator" unique_id=182742747]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -5)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D126" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D126" type="MeshInstance3D" parent="GridIndicator" unique_id=1999677620]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -4)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D127" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D127" type="MeshInstance3D" parent="GridIndicator" unique_id=537159296]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D128" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D128" type="MeshInstance3D" parent="GridIndicator" unique_id=1237151962]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -10)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D129" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D129" type="MeshInstance3D" parent="GridIndicator" unique_id=1916992198]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -9)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D130" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D130" type="MeshInstance3D" parent="GridIndicator" unique_id=1560214846]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -8)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D131" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D131" type="MeshInstance3D" parent="GridIndicator" unique_id=1694061675]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -9)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D132" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D132" type="MeshInstance3D" parent="GridIndicator" unique_id=1828827298]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -8)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D133" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D133" type="MeshInstance3D" parent="GridIndicator" unique_id=1959799179]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -10)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D134" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D134" type="MeshInstance3D" parent="GridIndicator" unique_id=1608311132]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -10)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D135" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D135" type="MeshInstance3D" parent="GridIndicator" unique_id=1382183985]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -9)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D136" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D136" type="MeshInstance3D" parent="GridIndicator" unique_id=206047656]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -8)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D137" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D137" type="MeshInstance3D" parent="GridIndicator" unique_id=1390372306]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -10)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D138" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D138" type="MeshInstance3D" parent="GridIndicator" unique_id=1799300406]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -9)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D139" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D139" type="MeshInstance3D" parent="GridIndicator" unique_id=479783832]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -8)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D140" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D140" type="MeshInstance3D" parent="GridIndicator" unique_id=1549905591]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -10)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D141" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D141" type="MeshInstance3D" parent="GridIndicator" unique_id=1670024390]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -9)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D142" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D142" type="MeshInstance3D" parent="GridIndicator" unique_id=1418793615]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -8)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D143" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D143" type="MeshInstance3D" parent="GridIndicator" unique_id=1083212725]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -10)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D144" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D144" type="MeshInstance3D" parent="GridIndicator" unique_id=939509192]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -9)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D145" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D145" type="MeshInstance3D" parent="GridIndicator" unique_id=1209542955]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -8)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D146" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D146" type="MeshInstance3D" parent="GridIndicator" unique_id=977406971]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -9)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D147" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D147" type="MeshInstance3D" parent="GridIndicator" unique_id=461276113]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -8)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D148" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D148" type="MeshInstance3D" parent="GridIndicator" unique_id=586806040]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -7)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D149" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D149" type="MeshInstance3D" parent="GridIndicator" unique_id=996309544]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -6)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D150" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D150" type="MeshInstance3D" parent="GridIndicator" unique_id=2023844342]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -7)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D151" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D151" type="MeshInstance3D" parent="GridIndicator" unique_id=190182980]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -6)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D152" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D152" type="MeshInstance3D" parent="GridIndicator" unique_id=2008335085]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -5)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D153" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D153" type="MeshInstance3D" parent="GridIndicator" unique_id=1121799023]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -4)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D154" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D154" type="MeshInstance3D" parent="GridIndicator" unique_id=1746002076]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -5)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D155" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D155" type="MeshInstance3D" parent="GridIndicator" unique_id=557218986]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -4)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D156" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D156" type="MeshInstance3D" parent="GridIndicator" unique_id=457479177]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -7)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D157" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D157" type="MeshInstance3D" parent="GridIndicator" unique_id=332100599]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -6)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D158" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D158" type="MeshInstance3D" parent="GridIndicator" unique_id=29827157]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -7)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D159" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D159" type="MeshInstance3D" parent="GridIndicator" unique_id=1580350228]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -6)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D160" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D160" type="MeshInstance3D" parent="GridIndicator" unique_id=234429645]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -5)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D161" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D161" type="MeshInstance3D" parent="GridIndicator" unique_id=303898481]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -4)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D162" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D162" type="MeshInstance3D" parent="GridIndicator" unique_id=52800780]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, -7)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D163" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D163" type="MeshInstance3D" parent="GridIndicator" unique_id=1036688496]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, -6)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D164" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D164" type="MeshInstance3D" parent="GridIndicator" unique_id=280272911]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, -5)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D165" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D165" type="MeshInstance3D" parent="GridIndicator" unique_id=298423839]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, -4)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D166" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D166" type="MeshInstance3D" parent="GridIndicator" unique_id=1711876713]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, -7)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D167" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D167" type="MeshInstance3D" parent="GridIndicator" unique_id=1577159536]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, -6)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D168" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D168" type="MeshInstance3D" parent="GridIndicator" unique_id=1280104946]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, -5)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D169" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D169" type="MeshInstance3D" parent="GridIndicator" unique_id=997580208]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, -4)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D170" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D170" type="MeshInstance3D" parent="GridIndicator" unique_id=162420110]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -7)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D171" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D171" type="MeshInstance3D" parent="GridIndicator" unique_id=709330600]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -6)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D172" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D172" type="MeshInstance3D" parent="GridIndicator" unique_id=1743654729]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -5)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D173" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D173" type="MeshInstance3D" parent="GridIndicator" unique_id=1590017788]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -4)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D174" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D174" type="MeshInstance3D" parent="GridIndicator" unique_id=602349402]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -5)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D175" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D175" type="MeshInstance3D" parent="GridIndicator" unique_id=766043646]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -4)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D176" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D176" type="MeshInstance3D" parent="GridIndicator" unique_id=744104115]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -10)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D177" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D177" type="MeshInstance3D" parent="GridIndicator" unique_id=1729383526]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -10)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D178" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D178" type="MeshInstance3D" parent="GridIndicator" unique_id=1505612383]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -9)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D179" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D179" type="MeshInstance3D" parent="GridIndicator" unique_id=652297308]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -8)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D180" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D180" type="MeshInstance3D" parent="GridIndicator" unique_id=1139977825]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -9)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D181" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D181" type="MeshInstance3D" parent="GridIndicator" unique_id=946086247]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -8)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D182" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D182" type="MeshInstance3D" parent="GridIndicator" unique_id=455639427]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -10)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D183" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D183" type="MeshInstance3D" parent="GridIndicator" unique_id=1491014570]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -10)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D184" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D184" type="MeshInstance3D" parent="GridIndicator" unique_id=1092639024]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -9)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D185" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D185" type="MeshInstance3D" parent="GridIndicator" unique_id=1687822208]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -8)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D186" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D186" type="MeshInstance3D" parent="GridIndicator" unique_id=2135991797]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, -10)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D187" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D187" type="MeshInstance3D" parent="GridIndicator" unique_id=2071261618]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, -9)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D188" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D188" type="MeshInstance3D" parent="GridIndicator" unique_id=116280699]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, -8)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D189" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D189" type="MeshInstance3D" parent="GridIndicator" unique_id=1122993418]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, -10)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D190" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D190" type="MeshInstance3D" parent="GridIndicator" unique_id=288349659]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, -9)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D191" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D191" type="MeshInstance3D" parent="GridIndicator" unique_id=1953999419]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, -8)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D192" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D192" type="MeshInstance3D" parent="GridIndicator" unique_id=814540174]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -10)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D193" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D193" type="MeshInstance3D" parent="GridIndicator" unique_id=1665697382]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -9)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D194" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D194" type="MeshInstance3D" parent="GridIndicator" unique_id=711214652]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -8)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D195" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D195" type="MeshInstance3D" parent="GridIndicator" unique_id=769837756]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -9)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="MeshInstance3D196" type="MeshInstance3D" parent="GridIndicator"]
+[node name="MeshInstance3D196" type="MeshInstance3D" parent="GridIndicator" unique_id=1428211710]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -8)
 mesh = SubResource("BoxMesh_bjucw")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1513505944]
 
-[node name="ImGui" type="Container" parent="CanvasLayer"]
+[node name="ImGui" type="Container" parent="CanvasLayer" unique_id=1379960552]
 offset_left = 34.0
 offset_top = 64.0
 offset_right = 74.0
@@ -833,7 +833,7 @@ scale = Vector2(2, 2)
 script = ExtResource("2_3shom")
 metadata/_custom_type_script = "uid://bo18f7fx555fw"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer" unique_id=118138573]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -841,11 +841,11 @@ offset_left = -40.0
 offset_bottom = 40.0
 grow_horizontal = 0
 
-[node name="MoveX" type="Button" parent="CanvasLayer/VBoxContainer"]
+[node name="MoveX" type="Button" parent="CanvasLayer/VBoxContainer" unique_id=2013966081]
 layout_mode = 2
 text = "Move Randomly"
 
-[node name="ScaleX" type="Button" parent="CanvasLayer/VBoxContainer"]
+[node name="ScaleX" type="Button" parent="CanvasLayer/VBoxContainer" unique_id=842961265]
 layout_mode = 2
 text = "Scale X"
 
