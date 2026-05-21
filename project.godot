@@ -14,6 +14,7 @@ config/name="imgui-godot"
 run/main_scene="uid://bv12a7irye02g"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
+config/tags=PackedStringArray("addon")
 
 [display]
 
