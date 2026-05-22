@@ -10,6 +10,7 @@ var __theme_variations_stack: Array[String] = []
 var __min_size_stack: Array[Vector2] = []
 var __next_min_size_stack: Array[Vector2] = []
 var __alignment_horizontal_stack: Array[SizeFlags] = []
+var __alignment_vertical_stack: Array[SizeFlags] = []
 
 
 @export_group("Defaults", "_default")
@@ -44,11 +45,21 @@ func pop_variation(count: int = 1) -> void:
 func push_alignment_h(align: SizeFlags) -> void:
 	__alignment_horizontal_stack.append(align)
 
+
 func pop_alignment_h(count: int = 1) -> void:
 	assert(count >= 1)
 	for i in count:
 		assert(not __alignment_horizontal_stack.is_empty(), "Attempted to pop empty stack")
 		__alignment_horizontal_stack.pop_back()
+
+func push_alignment_v(align: SizeFlags) -> void:
+	__alignment_vertical_stack.append(align)
+
+func pop_alignment_v(count: int = 1) -> void:
+	assert(count >= 1)
+	for i in count:
+		assert(not __alignment_vertical_stack.is_empty(), "Attempted to pop empty stack")
+		__alignment_vertical_stack.pop_back()
 
 ## Set minimum size of the [i]next[/i] element that will be created. Also see [method ImGui.push_min_size].
 func next_min_size(min_width: float, min_height: float) -> void:
@@ -569,6 +580,40 @@ func end_hbox() -> void:
 	__cursor.pop_back()
 	__cursor[__cursor.size() - 1] += 1
 
+## Convenience method for [method begin_scroll]. Pushes minimal size and makes
+## sure that the containers expands as much as possible before scrolling.
+func begin_scroll_v(min_height: int = 300) -> void:
+	push_min_height(min_height)
+	push_alignment_v(SizeFlags.SIZE_EXPAND_FILL)
+	begin_scroll(ScrollContainer.ScrollMode.SCROLL_MODE_RESERVE, ScrollContainer.ScrollMode.SCROLL_MODE_DISABLED)
+	pop_alignment_v()
+	pop_minimum_size()
+
+func begin_scroll(vertical: ScrollContainer.ScrollMode = ScrollContainer.ScrollMode.SCROLL_MODE_RESERVE, horizontal: ScrollContainer.ScrollMode = ScrollContainer.ScrollMode.SCROLL_MODE_MAXIMIZE_FIRST) -> void:
+	var current := _get_current_node()
+	if current is not ScrollContainer:
+		_destroy_rest_of_this_layout_level()
+		var scroll := ScrollContainer.new()
+		scroll.name = str(__cursor).validate_node_name()
+		__parent.add_child(scroll)
+		current = scroll
+	
+	current.horizontal_scroll_mode = horizontal
+	current.vertical_scroll_mode = vertical
+	_apply_styling(current)
+	__parent = current
+	__cursor.append(0)
+
+
+func end_scroll() -> void:
+	assert(__parent is ScrollContainer)
+	if __parent.get_child_count() != __cursor[__cursor.size() - 1]:
+		_destroy_rest_of_this_layout_level()
+
+	__parent = __parent.get_parent()
+	__cursor.pop_back()
+	__cursor[__cursor.size() - 1] += 1
+
 
 func begin_panel() -> void:
 	var current := _get_current_node()
@@ -673,3 +718,5 @@ func _apply_styling(element: Control) -> void:
 		element.custom_minimum_size = Vector2.ZERO if __min_size_stack.is_empty() else __min_size_stack.back()
 
 	element.size_flags_horizontal = Control.SIZE_FILL if __alignment_horizontal_stack.is_empty() else __alignment_horizontal_stack.back()
+	element.size_flags_vertical = Control.SIZE_FILL if __alignment_vertical_stack.is_empty() else __alignment_vertical_stack.back()
+	

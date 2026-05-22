@@ -19,6 +19,8 @@ var user_name: String = ""
 var user_bio: String = ""
 var user_logged_in: bool = true
 
+var dynamic_element_count := 3
+
 const ICON: Texture2D = preload("uid://bnoxb3l0cob4r")
 
 @onready var timer := Timer.new()
@@ -38,7 +40,10 @@ func _process(_delta: float) -> void:
 	
 	if g.tab("Game"):
 		_game_tab()
-		
+	
+	if g.tab("Dynamic content"):
+		_dynamic_tab()
+	
 	if show_advanced:
 		if g.tab("Game - advanced"):
 			_advanced_tab()
@@ -152,6 +157,31 @@ func _game_tab() -> void:
 	g.end_tabs()
 	
 	g.end_vbox()
+
+func _dynamic_tab() -> void:
+	g.push_min_height(300)
+	g.push_alignment_v(SizeFlags.SIZE_EXPAND_FILL)
+	g.begin_scroll_v() # Scroll Container
+	g.pop_alignment_v()
+	g.pop_minimum_size()
+	
+	g.begin_vbox()
+	
+	g.begin_hbox()
+	if g.button("+1"):
+		dynamic_element_count += 1
+	if g.button("-1", dynamic_element_count > 0):
+		dynamic_element_count = max(dynamic_element_count - 1, 0)
+	g.end_hbox()
+	g.label("Number of labels: %d" % dynamic_element_count)
+	g.separator()
+	
+	for _i in dynamic_element_count:
+		g.label("Add as many of these labels as you want!")
+	
+	g.end_vbox()
+	g.end_scroll()
+	
 
 func _advanced_tab() -> void:
 	g.begin_vbox()
