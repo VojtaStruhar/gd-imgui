@@ -410,6 +410,35 @@ func rich_label(bbcode: String) -> void:
 
 	__cursor[__cursor.size() - 1] += 1 # Next node
 
+
+## Injects [param control] — a node instance you created and hold a reference
+## to — into the UI at the current cursor position. Call it every frame, like
+## any other widget.
+## [br][br]
+## Unlike imgui-created nodes, an embedded node is only ever [i]removed[/i]
+## from the tree when it stops appearing in the frame's calls — never freed —
+## so the instance and all of its internal state persist, and it can be
+## embedded again later, even at a different position. ImGui also never writes
+## to it: minimum size, size flags and everything else are yours to configure
+## on the instance (styling stacks and [code]next_*[/code] one-shots don't
+## apply). If the node currently has a parent, it is reparented.
+## [br][br]
+## Freeing the instance remains your responsibility — but note it dies with
+## the tree like any node if it's still embedded when the ImGui node is freed.
+func embed(control: Control) -> void:
+	assert(control != null)
+	var current := _node_at_cursor()
+	if current != control:
+		_destroy_rest_of_this_layout_level()
+		control.set_meta(&"_imgui_embedded", true)
+		var previous_parent := control.get_parent()
+		if previous_parent != null:
+			previous_parent.remove_child(control)
+		__parent.add_child(control)
+
+	__cursor[__cursor.size() - 1] += 1 # Next node
+
+
 func separator() -> void:
 	match __parent.get_class():
 		&"HBoxContainer", &"HFlowContainer":
@@ -872,9 +901,10 @@ func end_vflow() -> void:
 	__cursor[__cursor.size() - 1] += 1
 
 ## Vertical scroll area that fits its content: it grows with the content until
-## it would leave the bottom of the screen (or exceed [param max_height]), then
-## stops growing and scrolls instead. Wrap tool panels in this so they never
-## overflow the window. Also see [method begin_tool_panel].
+## it would leave the bottom of the screen — or of the ImGui's own rect, when
+## the ImGui node has one (an [method embed]ded imgui, for example) — or exceed
+## [param max_height]; then it stops growing and scrolls instead. Wrap tool
+## panels in this so they never overflow. Also see [method begin_tool_panel].
 ## [br][br]
 ## Note: [ScrollContainer] only stretches its child across the scroll area when
 ## the child expands — call [code]next_alignment_h(SIZE_EXPAND_FILL)[/code]
@@ -903,6 +933,12 @@ func begin_scroll_v(min_height: float = 0.0, max_height: float = -1.0) -> void:
 				content_height = maxf(content_height, child.get_combined_minimum_size().y)
 
 	var available := get_viewport_rect().size.y - current.get_global_rect().position.y
+	if size.y > 0.0:
+		# An ImGui with a bounded rect of its own (e.g. embedded inside another
+		# UI) also caps the fit — never grow past its bottom edge. Roots
+		# without a size (like a bare Container dropped into a scene) are
+		# bounded by the screen only.
+		available = minf(available, get_global_rect().end.y - current.get_global_rect().position.y)
 	if __parent is PanelContainer:
 		available -= __parent.get_theme_stylebox(&"panel").get_margin(SIDE_BOTTOM)
 	if max_height >= 0.0:
@@ -1283,7 +1319,7 @@ func _imgui_window_titlebar_input(event: InputEvent, window: PanelContainer) -> 
 			window.position += event.relative
 
 
-func _get_current_node() -> Control:
+func _node_at_cursor() -> Control:
 	var c: Control = self
 	for i in __cursor:
 		if c.get_child_count() > i:
@@ -1293,12 +1329,23 @@ func _get_current_node() -> Control:
 	return c
 
 
+func _get_current_node() -> Control:
+	var current := _node_at_cursor()
+	if current != null and current.has_meta(&"_imgui_embedded"):
+		# An embedded node never matches a regular widget call, even if the
+		# type fits — the widget must not adopt and mutate a user-owned node.
+		# Returning null makes the caller rebuild the slot, and the destroy
+		# path below removes the embedded node without freeing it.
+		return null
+	return current
+
+
 func _destroy_rest_of_this_layout_level() -> void:
 	if __cursor.is_empty():
 		# This only happens with the very first container?
 		return
 
-	var incorrect_one := _get_current_node()
+	var incorrect_one := _node_at_cursor()
 	if incorrect_one == null:
 		# The node isn't created yet
 		return
@@ -1307,7 +1354,20 @@ func _destroy_rest_of_this_layout_level() -> void:
 	while p.get_child_count() > __cursor[__cursor.size() - 1]:
 		var child := p.get_child(-1)
 		p.remove_child(child)
+		if child.has_meta(&"_imgui_embedded"):
+			continue # User-owned: leaves the tree, but is never freed.
+		_rescue_embedded_nodes(child)
 		child.queue_free()
+
+
+## Pulls embedded (user-owned) nodes out of a subtree that is about to be
+## freed, so they survive the destruction of their imgui-created ancestors.
+func _rescue_embedded_nodes(doomed: Node) -> void:
+	for child in doomed.get_children():
+		if child.has_meta(&"_imgui_embedded"):
+			doomed.remove_child(child)
+		else:
+			_rescue_embedded_nodes(child)
 
 func _apply_styling(element: Control) -> void:
 	if __next_variation != "":

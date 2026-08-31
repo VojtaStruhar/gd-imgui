@@ -92,3 +92,7 @@ Some features have different names to be familiar to Godot developers._
   - Develop commonly used widgets by composing the basics? This would probably inherit `ImGui` class.
   - [x] `begin_tool_panel` — panel + fitted scroll + margin + vbox in one
     call; the recommended root for tool UIs
+  - [x] `embed(control)` — inject a node instance you created yourself. It is
+    only ever removed from the tree, never freed, so the instance and its
+    state persist; imgui doesn't touch its properties
+
