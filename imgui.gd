@@ -8,13 +8,13 @@ var __cursor: Array[int] = [0]
 var __theme_variations_stack: Array[String] = []
 # Applies minimum size to ALL elements, until popped.
 var __min_size_stack: Array[Vector2] = []
-var __next_min_size_stack: Array[Vector2] = []
 var __alignment_horizontal_stack: Array[SizeFlags] = []
 var __alignment_vertical_stack: Array[SizeFlags] = []
 var __font_size_stack: Array[int] = []
 var __font_color_stack: Array[Color] = []
 var __separation_stack: Array[int] = []
 var __next_variation: String = ""
+var __next_min_size: Variant = null # Vector2, or null when unset
 var __next_font_size: int = -1
 var __next_font_color: Variant = null # Color, or null when unset
 var __next_separation: int = -1
@@ -51,6 +51,7 @@ func _process(_delta: float) -> void:
 		push_warning("Leftover separations in the stack: " + str(__separation_stack))
 		__separation_stack.clear()
 	__next_variation = ""
+	__next_min_size = null
 	__next_font_size = -1
 	__next_font_color = null
 	__next_separation = -1
@@ -102,9 +103,10 @@ func pop_alignment_v(count: int = 1) -> void:
 func next_alignment_v(align: SizeFlags) -> void:
 	__next_alignment_v = align
 
-## Set minimum size of the [i]next[/i] element that will be created. Also see [method ImGui.push_min_size].
+## Set minimum size of the [i]next[/i] element that will be created. Takes
+## precedence over [method ImGui.push_min_size].
 func next_min_size(min_width: float, min_height: float) -> void:
-	__next_min_size_stack.append(Vector2(min_width, min_height))
+	__next_min_size = Vector2(min_width, min_height)
 
 ## Convenience method for [method ImGui.next_min_size]
 func next_min_height(min_height: float) -> void:
@@ -1314,8 +1316,9 @@ func _apply_styling(element: Control) -> void:
 	else:
 		element.theme_type_variation = "" if __theme_variations_stack.is_empty() else __theme_variations_stack.back()
 
-	if not __next_min_size_stack.is_empty():
-		element.custom_minimum_size = __next_min_size_stack.pop_back()
+	if __next_min_size != null:
+		element.custom_minimum_size = __next_min_size
+		__next_min_size = null
 	else:
 		element.custom_minimum_size = Vector2.ZERO if __min_size_stack.is_empty() else __min_size_stack.back()
 
