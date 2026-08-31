@@ -159,12 +159,7 @@ func _game_tab() -> void:
 	g.end_vbox()
 
 func _dynamic_tab() -> void:
-	g.push_min_height(300)
-	g.push_alignment_v(SizeFlags.SIZE_EXPAND_FILL)
-	g.begin_scroll_v() # Scroll Container
-	g.pop_alignment_v()
-	g.pop_minimum_size()
-	
+	g.begin_scroll_v()
 	g.begin_vbox()
 	
 	g.begin_hbox()
