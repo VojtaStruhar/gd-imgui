@@ -31,24 +31,25 @@ detected, nodes are destroyed and recreated to match the new layout.
 _I'm using [Dear ImGui](https://github.com/ocornut/imgui)'s API as a reference.
 Some features have different names to be familiar to Godot developers._
 
-- [ ] Layouts
+- **Layouts**
   - [x] Row / Column
   - [x] Grid
   - [x] Margin
   - [x] Panel
-  - [ ] Flow
+  - [ ] Flow container
   - [x] Tabs
-  - [ ] Scroll
+  - [x] Scroll
+    - [ ] TODO: Revisit this one!
   - [ ] Foldable
   - [ ] Split container
   - [ ] Trees
-  - [ ] Draggable windows (similar to Dear ImGui)
+  - [ ] OPTIONAL: Draggable windows (similar to Dear ImGui) (This is something imgui's control node can handle via Godot)
   - [ ] Aspect ratio container
-- [ ] Display information
+- **Display information**
   - [x] Label
   - [x] TextureRect
   - [ ] ColorRect
-- [ ] Input
+- **Input**
   - [x] Button
   - [x] Number field
   - [x] Text field
@@ -58,8 +59,10 @@ Some features have different names to be familiar to Godot developers._
   - [x] Separators
   - [x] Sliders
   - [x] Text area (TextEdit)
+    - [ ] Toggle password input
   - [ ] Color picker
-- [ ] Styling
+- **Styling**
+  - [ ] Add `next_*` methods in addition to `push` and `pop` for pretty much everything!
   - [x] Enabled / Disabled inputs
   - [x] [Theme variations](https://docs.godotengine.org/en/stable/tutorials/ui/gui_theme_type_variations.html)
   - [ ] Common Theme overrides
@@ -72,6 +75,7 @@ Some features have different names to be familiar to Godot developers._
   - [ ] Rich text label
   - [ ] Container spacing
   - [ ] Tooltips
-  - [ ] Texture Rect - texture stretch
-- [ ] Convenience features
-  - Develop commonly used widgets by composing the basics.
+  - [ ] Texture Rect
+    - Come up with the most useful stretch / sizing modes and make them easy to access.
+- **Convenience features**
+  - Develop commonly used widgets by composing the basics? This would probably inherit `ImGui` class.
