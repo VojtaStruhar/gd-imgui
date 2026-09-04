@@ -1,6 +1,9 @@
 class_name ImGui
 extends Container
 
+@warning_ignore_start("unsafe_property_access")
+@warning_ignore_start("unsafe_method_access")
+
 var __parent: Control = self
 var __inputs: Dictionary[NodePath, Dictionary] = { }
 # Call depth
@@ -27,6 +30,7 @@ var __next_anchors_preset: int = -1
 @export_group("Defaults", "_default")
 @export var _default_slider_v_height: float = 50
 @export var _default_slider_h_width: float = 50
+
 
 func _ready() -> void:
 	for child in get_children():
