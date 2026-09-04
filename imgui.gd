@@ -1220,8 +1220,8 @@ func end_foldable() -> void:
 ## Dear-ImGui-style tree node: a foldable with indented content, meant to be
 ## nested. Returns [code]true[/code] while expanded — the contents may be
 ## skipped while folded, but [method end_tree_node] must always be called.
-func begin_tree_node(label: String, default_folded: bool = true) -> bool:
-	var expanded := begin_foldable(label, default_folded)
+func begin_tree_node(title: String, default_folded: bool = true) -> bool:
+	var expanded := begin_foldable(title, default_folded)
 	begin_margin_v(Vector4i(16, 0, 0, 0))
 	begin_vbox()
 	return expanded
@@ -1449,8 +1449,8 @@ func _build_window_titlebar(window: PanelContainer) -> PanelContainer:
 ## that variation with a "panel" stylebox. Only runs once, at the title bar's
 ## creation.
 func _style_window_titlebar(bar: PanelContainer) -> void:
-	var theme := _find_effective_theme()
-	if theme != null and theme.has_stylebox(&"panel", &"ImGuiWindowTitleBar"):
+	var nearest_theme := _find_effective_theme()
+	if nearest_theme != null and nearest_theme.has_stylebox(&"panel", &"ImGuiWindowTitleBar"):
 		bar.theme_type_variation = &"ImGuiWindowTitleBar"
 		return
 	var style := StyleBoxFlat.new()
