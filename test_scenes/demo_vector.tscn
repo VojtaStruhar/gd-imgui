@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://wyq3ugnloytt"]
+
+[ext_resource type="Theme" uid="uid://d12r2lm4y2qr4" path="res://main_theme.tres" id="1_theme"]
+[ext_resource type="Script" uid="uid://b07owacyunfd8" path="res://test_scenes/demo_vector.gd" id="2_script"]
+[ext_resource type="Script" uid="uid://bo18f7fx555fw" path="res://imgui.gd" id="3_imgui"]
+
+[node name="DemoVector" type="Control" unique_id=941765267]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+script = ExtResource("2_script")
+
+[node name="Imgui" type="Container" parent="." unique_id=795530594]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_imgui")

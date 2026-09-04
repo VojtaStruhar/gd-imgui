@@ -37,6 +37,17 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	assert(__cursor.size() == 1)
+	# Mirrors what every end_*() already does for its own container: prune
+	# trailing children beyond where last frame's calls actually reached.
+	# Without this, a top-level widget whose call is dropped between frames
+	# (e.g. `if x: g.begin_panel()...g.end_panel()` at the root) would never
+	# be revisited by anything and leak forever — every other nesting level
+	# gets this for free from its begin_*/end_* pair, but the root has no
+	# such pair, so _process() (which runs once per frame, after this frame's
+	# calls already landed and before next frame's begin) is where it happens
+	# for the root.
+	if get_child_count() != __cursor[0]:
+		_destroy_rest_of_this_layout_level()
 	__cursor[0] = 0
 	if not __theme_variations_stack.is_empty():
 		push_warning("Leftover theme variations in the stack: " + str(__theme_variations_stack))
@@ -60,7 +71,29 @@ func _process(_delta: float) -> void:
 	__next_tooltip = ""
 	__next_anchors_preset = -1
 
-## All future [Control]s created with this ImGui will receive this 
+
+## Returns [code]true[/code] while the mouse is over (or captured by) any part
+## of this UI. Poll it before treating mouse input as game input, so clicking
+## a widget doesn't also click the game world:
+## [codeblock]
+## if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and not g.wants_mouse():
+##     shoot()
+## [/codeblock]
+## Note: popups (e.g. an open dropdown list) are separate windows and may
+## report [code]false[/code] while the mouse is over them.
+func wants_mouse() -> bool:
+	var hovered := get_viewport().gui_get_hovered_control()
+	return hovered != null and (hovered == self or is_ancestor_of(hovered))
+
+
+## Returns [code]true[/code] while a widget of this UI holds keyboard focus
+## (e.g. a text field being edited) — suppress game shortcuts while it does.
+func wants_keyboard() -> bool:
+	var focused := get_viewport().gui_get_focus_owner()
+	return focused != null and (focused == self or is_ancestor_of(focused))
+
+
+## All future [Control]s created with this ImGui will receive this
 ## [member Control.theme_type_variation] until it is popped with [method ImGui.pop_variation].
 func push_variation(theme_variation: String) -> void:
 	__theme_variations_stack.append(theme_variation)
@@ -303,7 +336,7 @@ func toggle(on: bool, text: String = "", enabled: bool = true) -> bool:
 
 	_apply_styling(current)
 	current.disabled = !enabled
-	var np := self.get_path_to(current)
+	var np := _np(current)
 	if not __inputs.erase(np):
 		current.set_pressed_no_signal(on)
 	
@@ -324,7 +357,7 @@ func checkbox(on: bool, text: String = "") -> bool:
 		current = check
 
 	_apply_styling(current)
-	var np := self.get_path_to(current)
+	var np := _np(current)
 	if not __inputs.erase(np):
 		current.set_pressed_no_signal(on)
 		
@@ -474,7 +507,7 @@ func separator_h() -> void:
 	__cursor[__cursor.size() - 1] += 1 # Next node
 
 
-func button(text: String, enabled: bool = true) -> bool:
+func button(text: String, enabled: bool = true, icon: Texture2D = null) -> bool:
 	var current := _get_current_node()
 	if current == null or current.get_class() != "Button":
 		_destroy_rest_of_this_layout_level()
@@ -487,7 +520,9 @@ func button(text: String, enabled: bool = true) -> bool:
 	_apply_styling(current)
 	current.disabled = !enabled
 	current.text = text
-	var np := self.get_path_to(current)
+	if current.icon != icon:
+		current.icon = icon
+	var np := _np(current)
 
 	__cursor[__cursor.size() - 1] += 1 # Next node
 	return __inputs.erase(np)
@@ -510,7 +545,7 @@ func textfield(text: String, enabled: bool = true, secret: bool = false) -> Stri
 	current.editable = enabled
 	if current.secret != secret:
 		current.secret = secret
-	var np := self.get_path_to(current)
+	var np := _np(current)
 	if __inputs.has(np):
 		__inputs.erase(np)
 	else:
@@ -541,7 +576,7 @@ func textedit(text: String, enabled: bool = true) -> String:
 
 	_apply_styling(current)
 	current.editable = enabled
-	var np := self.get_path_to(current)
+	var np := _np(current)
 	if __inputs.has(np):
 		__inputs.erase(np)
 	else:
@@ -577,13 +612,77 @@ func dropdown(selected_index: int, options: Array[String], enabled: bool = true)
 	_apply_styling(current)
 	current.disabled = !enabled
 
-	var np := self.get_path_to(current)
+	var np := _np(current)
 	if not __inputs.erase(np): # Means that there is no input
 		(current as OptionButton).selected = selected_index
 
 	__cursor[__cursor.size() - 1] += 1 # Next node
 
 	return current.selected
+
+
+## Mutually exclusive set of options, Dear-ImGui-style radio buttons. Built on
+## a real [ButtonGroup] so Godot itself enforces exclusivity the instant one is
+## clicked — there's never a frame where two options can appear selected.
+## [param selected_index] is clamped into range; pass an out-of-range value
+## (e.g. [code]-1[/code]) to start with nothing selected.
+func radio(selected_index: int, options: Array[String], enabled: bool = true) -> int:
+	var current := _get_current_node()
+	if current is not HBoxContainer or not current.has_meta(&"_imgui_radio_group"):
+		_destroy_rest_of_this_layout_level()
+		var hbox := HBoxContainer.new()
+		hbox.name = str(__cursor).validate_node_name()
+		hbox.set_meta(&"_imgui_radio_group", ButtonGroup.new())
+		__parent.add_child(hbox)
+		current = hbox
+
+	_apply_styling(current)
+	var group: ButtonGroup = current.get_meta(&"_imgui_radio_group")
+
+	for i in options.size():
+		var option: CheckBox
+		if i < current.get_child_count():
+			option = current.get_child(i)
+		else:
+			option = CheckBox.new()
+			option.button_group = group
+			option.toggled.connect(_register_button_toggle.bind(option))
+			current.add_child(option)
+		if option.text != options[i]:
+			option.text = options[i]
+		if option.disabled != !enabled:
+			option.disabled = !enabled
+	while current.get_child_count() > options.size():
+		var extra := current.get_child(-1)
+		current.remove_child(extra)
+		extra.queue_free()
+
+	# A click fires toggled(true) on the newly-selected option and, since
+	# ButtonGroup enforces exclusivity, toggled(false) on whichever one it
+	# replaced — both land in __inputs via the shared handler above. Only the
+	# true one is a real selection; the false one is consumed (erased) so it
+	# doesn't leak into next frame, but otherwise ignored.
+	var clicked := -1
+	for i in options.size():
+		var option: CheckBox = current.get_child(i)
+		var np := _np(option)
+		if __inputs.has(np):
+			if __inputs[np].get("value", false):
+				clicked = i
+			__inputs.erase(np)
+
+	var result: int = clicked if clicked >= 0 else selected_index
+	for i in options.size():
+		var option: CheckBox = current.get_child(i)
+		var should_be_pressed := i == result
+		if option.button_pressed != should_be_pressed:
+			# ButtonGroup does not enforce exclusivity for *_no_signal calls,
+			# so every option must be driven explicitly, not just the winner.
+			option.set_pressed_no_signal(should_be_pressed)
+
+	__cursor[__cursor.size() - 1] += 1 # Next node
+
+	return result
 
 
 ## Compact color input ([ColorPickerButton]). Returns the current color.
@@ -602,7 +701,7 @@ func color_picker(color: Color, edit_alpha: bool = true, enabled: bool = true) -
 	if current.edit_alpha != edit_alpha:
 		current.edit_alpha = edit_alpha
 
-	var np := self.get_path_to(current)
+	var np := _np(current)
 	if not __inputs.erase(np): # Means that there is no input
 		if current.color != color:
 			current.color = color
@@ -640,7 +739,7 @@ func spinbox(value: int, min_val: int, max_val: int, step: int = 1, enabled: boo
 	if current.step != step:
 		current.step = step
 
-	var np := self.get_path_to(current)
+	var np := _np(current)
 	if not __inputs.erase(np): # Means that there is no input
 		if current.value != value:
 			current.set_value_no_signal(value)
@@ -677,7 +776,7 @@ func spinboxf(value: float, min_val: float, max_val: float, step: float = 0.01, 
 	if current.step != step:
 		current.step = step
 
-	var np := self.get_path_to(current)
+	var np := _np(current)
 	if not __inputs.erase(np): # Means that there is no input
 		if current.value != value:
 			current.set_value_no_signal(value)
@@ -718,7 +817,7 @@ func slider_h(value: float, min_val: float, max_val: float, step: float = 0.1, e
 		current.max_value = max_val
 	if current.step != step:
 		current.step = step
-	var np := self.get_path_to(current)
+	var np := _np(current)
 	var target_value: float = __inputs.get(np, {}).get("value", value)
 	if current.value != target_value:
 		current.set_value_no_signal(target_value)
@@ -758,13 +857,46 @@ func slider_v(value: float, min_val: float, max_val: float, step: float = 1, ena
 	current.max_value = max_val
 	current.step = step
 	
-	var np := self.get_path_to(current)
+	var np := _np(current)
 	current.set_value_no_signal(__inputs.get(np, {}).get("value", value))
 	if __inputs.has(np): __inputs.erase(np)
 
 	__cursor[__cursor.size() - 1] += 1 # Next node
 
 	return current.value
+
+
+## Compact row for editing a [Vector2], styled like the editor inspector: a
+## small axis-colored label in front of each field. Built entirely out of
+## [method label], [method spinboxf] and [method begin_hbox] — proof that a
+## widget like this needs no framework changes, just composing the basics
+## (see also [method vector3]).
+func vector2(value: Vector2, min_val: float = -INF, max_val: float = INF, step: float = 0.01, enabled: bool = true) -> Vector2:
+	begin_hbox()
+	next_font_color(Color(0.96, 0.2, 0.32))
+	label("X")
+	value.x = spinboxf(value.x, min_val, max_val, step, enabled)
+	next_font_color(Color(0.53, 0.84, 0.01))
+	label("Y")
+	value.y = spinboxf(value.y, min_val, max_val, step, enabled)
+	end_hbox()
+	return value
+
+
+## Compact row for editing a [Vector3]. See [method vector2].
+func vector3(value: Vector3, min_val: float = -INF, max_val: float = INF, step: float = 0.01, enabled: bool = true) -> Vector3:
+	begin_hbox()
+	next_font_color(Color(0.96, 0.2, 0.32))
+	label("X")
+	value.x = spinboxf(value.x, min_val, max_val, step, enabled)
+	next_font_color(Color(0.53, 0.84, 0.01))
+	label("Y")
+	value.y = spinboxf(value.y, min_val, max_val, step, enabled)
+	next_font_color(Color(0.16, 0.55, 0.96))
+	label("Z")
+	value.z = spinboxf(value.z, min_val, max_val, step, enabled)
+	end_hbox()
+	return value
 
 
 func begin_vbox() -> void:
@@ -1212,7 +1344,7 @@ func begin_window(title: String, open: bool = true, closable: bool = false, init
 
 	_apply_styling(current)
 
-	var np := self.get_path_to(current)
+	var np := _np(current)
 	var is_open := open
 	if __inputs.erase(np): # The close button was pressed
 		is_open = false
@@ -1258,30 +1390,30 @@ func end_window() -> void:
 # -------------------- UTILITIES -------------------- #
 
 func _register_button_press(b: Button) -> void:
-	__inputs[self.get_path_to(b)] = { }
+	__inputs[_np(b)] = { }
 
 func _register_button_toggle(new_value: bool, b: BaseButton) -> void:
-	__inputs[self.get_path_to(b)] = { "value": new_value }
+	__inputs[_np(b)] = { "value": new_value }
 
 func _register_textfield_input(new_text: String, le: LineEdit) -> void:
-	__inputs[self.get_path_to(le)] = { "value": new_text }
+	__inputs[_np(le)] = { "value": new_text }
 
 func _register_textedit_input(te: TextEdit) -> void:
-	__inputs[self.get_path_to(te)] = { "value": te.text }
+	__inputs[_np(te)] = { "value": te.text }
 
 func _register_dropdown_select(ob: OptionButton) -> void:
-	__inputs[self.get_path_to(ob)] = { "value": ob.selected }
+	__inputs[_np(ob)] = { "value": ob.selected }
 
 func _register_spinbox_change(new_value: float, origin: Control) -> void:
-	__inputs[self.get_path_to(origin)] = { "value": new_value }
+	__inputs[_np(origin)] = { "value": new_value }
 
 
 func _register_color_change(new_color: Color, origin: Control) -> void:
-	__inputs[self.get_path_to(origin)] = { "value": new_color }
+	__inputs[_np(origin)] = { "value": new_color }
 
 
 func _register_window_close(window: PanelContainer) -> void:
-	__inputs[self.get_path_to(window)] = { "value": false }
+	__inputs[_np(window)] = { "value": false }
 
 
 func _build_window_titlebar(window: PanelContainer) -> PanelContainer:
@@ -1290,11 +1422,7 @@ func _build_window_titlebar(window: PanelContainer) -> PanelContainer:
 	bar.set_meta(&"_imgui_window_titlebar", true)
 	bar.mouse_default_cursor_shape = Control.CURSOR_MOVE
 	bar.gui_input.connect(_imgui_window_titlebar_input.bind(window))
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.12, 0.15, 0.22)
-	style.set_content_margin_all(4)
-	style.content_margin_left = 8
-	bar.add_theme_stylebox_override(&"panel", style)
+	_style_window_titlebar(bar)
 
 	var row := HBoxContainer.new()
 	var title_label := Label.new()
@@ -1310,6 +1438,39 @@ func _build_window_titlebar(window: PanelContainer) -> PanelContainer:
 	return bar
 
 
+## Lets a theme override the window title bar's look via an
+## "ImGuiWindowTitleBar" [PanelContainer] type variation — see
+## [code]main_theme.tres[/code] for a working example. Falls back to a
+## built-in dark style when no theme reachable from this ImGui node registers
+## that variation with a "panel" stylebox. Only runs once, at the title bar's
+## creation.
+func _style_window_titlebar(bar: PanelContainer) -> void:
+	var theme := _find_effective_theme()
+	if theme != null and theme.has_stylebox(&"panel", &"ImGuiWindowTitleBar"):
+		bar.theme_type_variation = &"ImGuiWindowTitleBar"
+		return
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.12, 0.15, 0.22)
+	style.set_content_margin_all(4)
+	style.content_margin_left = 8
+	bar.add_theme_stylebox_override(&"panel", style)
+
+
+## Walks up from this ImGui node to find the nearest ancestor [Control] with a
+## [Theme] assigned — the same resource Godot's own theme inheritance would
+## eventually resolve through. Used only to ask whether [i]that specific
+## resource[/i] explicitly defines something: unlike [method
+## Control.has_theme_stylebox], which also matches the engine's built-in
+## default theme and so can never distinguish "customized" from "not".
+func _find_effective_theme() -> Theme:
+	var node: Node = self
+	while node != null:
+		if node is Control and node.theme != null:
+			return node.theme
+		node = node.get_parent()
+	return null
+
+
 func _imgui_window_titlebar_input(event: InputEvent, window: PanelContainer) -> void:
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT:
@@ -1317,6 +1478,22 @@ func _imgui_window_titlebar_input(event: InputEvent, window: PanelContainer) -> 
 	elif event is InputEventMouseMotion:
 		if window.get_meta(&"_imgui_window_dragging", false):
 			window.position += event.relative
+
+
+## Path from this ImGui root to [param node], relative to which [member __inputs]
+## is keyed. Cached in node meta after the first lookup: recomputing it via
+## [method Node.get_path_to] means walking every ancestor up to the root, and
+## every stateful widget does this at least once per frame. Safe to cache for
+## the node's whole lifetime because widget nodes keep a fixed name and never
+## reparent without first being destroyed and recreated (which means a new
+## node, and a fresh cache entry) — the one exception, embedded nodes, never
+## goes through [member __inputs] at all.
+func _np(node: Node) -> NodePath:
+	if node.has_meta(&"_imgui_np"):
+		return node.get_meta(&"_imgui_np")
+	var path := self.get_path_to(node)
+	node.set_meta(&"_imgui_np", path)
+	return path
 
 
 func _node_at_cursor() -> Control:
