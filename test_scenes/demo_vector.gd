@@ -19,10 +19,13 @@ func _process(_delta: float) -> void:
 	g.separator()
 
 	g.begin_grid(2)
+	g.next_alignment_v(Control.SizeFlags.SIZE_SHRINK_CENTER)
 	g.label("Position:")
 	object_position = g.vector3(object_position, -100, 100, 0.1)
+	g.next_alignment_v(Control.SizeFlags.SIZE_SHRINK_CENTER)
 	g.label("Scale:")
 	object_scale = g.vector3(object_scale, 0.1, 10, 0.05)
+	g.next_alignment_v(Control.SizeFlags.SIZE_SHRINK_CENTER)
 	g.label("UI offset:")
 	offset = g.vector2(offset, -50, 50)
 	g.end_grid()

@@ -873,12 +873,14 @@ func slider_v(value: float, min_val: float, max_val: float, step: float = 1, ena
 ## (see also [method vector3]).
 func vector2(value: Vector2, min_val: float = -INF, max_val: float = INF, step: float = 0.01, enabled: bool = true) -> Vector2:
 	begin_hbox()
+	push_alignment_v(Control.SizeFlags.SIZE_SHRINK_CENTER)
 	next_font_color(Color(0.96, 0.2, 0.32))
 	label("X")
 	value.x = spinboxf(value.x, min_val, max_val, step, enabled)
 	next_font_color(Color(0.53, 0.84, 0.01))
 	label("Y")
 	value.y = spinboxf(value.y, min_val, max_val, step, enabled)
+	pop_alignment_v()
 	end_hbox()
 	return value
 
@@ -886,6 +888,7 @@ func vector2(value: Vector2, min_val: float = -INF, max_val: float = INF, step: 
 ## Compact row for editing a [Vector3]. See [method vector2].
 func vector3(value: Vector3, min_val: float = -INF, max_val: float = INF, step: float = 0.01, enabled: bool = true) -> Vector3:
 	begin_hbox()
+	push_alignment_v(Control.SizeFlags.SIZE_SHRINK_CENTER)
 	next_font_color(Color(0.96, 0.2, 0.32))
 	label("X")
 	value.x = spinboxf(value.x, min_val, max_val, step, enabled)
@@ -895,6 +898,7 @@ func vector3(value: Vector3, min_val: float = -INF, max_val: float = INF, step: 
 	next_font_color(Color(0.16, 0.55, 0.96))
 	label("Z")
 	value.z = spinboxf(value.z, min_val, max_val, step, enabled)
+	pop_alignment_v()
 	end_hbox()
 	return value
 
