@@ -1,13 +1,15 @@
 extends Control
 ## Demonstrates the styling API: push_font_size / push_font_color /
-## push_separation / next_tooltip — imperative styling for attributes that
-## would otherwise need theme (variation) edits.
+## push_separation / next_max_size / next_tooltip — imperative styling for
+## attributes that would otherwise need theme (variation) edits.
 
 @onready var g: ImGui = $Imgui
 
 var font_size := 24
 var font_color := Color(1.0, 0.6, 0.3)
 var separation := 16
+var slider_value := 50.0
+var propagate := false
 
 
 func _process(_delta: float) -> void:
@@ -47,6 +49,24 @@ func _process(_delta: float) -> void:
 		g.button("B%d" % i)
 	g.end_hbox()
 	g.pop_separation()
+	g.separator()
+
+	g.label("next_max_width caps a widget that would fill the panel:")
+	slider_value = g.slider_h(slider_value, 0, 100)
+	g.next_max_width(120)
+	slider_value = g.slider_h(slider_value, 0, 100)
+
+	propagate = g.checkbox(propagate, "next_propagate_max_size — the orange bar wants 400px, its container is capped at 200px")
+	g.next_max_width(200)
+	g.next_propagate_max_size(propagate)
+	g.begin_vbox()
+	g.next_min_size(200, 4)
+	g.next_alignment_h(Control.SIZE_SHRINK_BEGIN)
+	g.color_rect(Color.GRAY) # 200px reference
+	g.next_min_size(400, 14)
+	g.next_alignment_h(Control.SIZE_SHRINK_BEGIN)
+	g.color_rect(Color.ORANGE)
+	g.end_vbox()
 	g.separator()
 
 	g.next_tooltip("Tooltips work on any widget.")

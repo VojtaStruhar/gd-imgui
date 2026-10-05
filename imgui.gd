@@ -11,6 +11,9 @@ var __cursor: Array[int] = [0]
 var __theme_variations_stack: Array[String] = []
 # Applies minimum size to ALL elements, until popped.
 var __min_size_stack: Array[Vector2] = []
+# Same for the maximum size; a negative axis means unbounded.
+var __max_size_stack: Array[Vector2] = []
+var __propagate_max_size_stack: Array[bool] = []
 var __alignment_horizontal_stack: Array[SizeFlags] = []
 var __alignment_vertical_stack: Array[SizeFlags] = []
 var __font_size_stack: Array[int] = []
@@ -18,6 +21,8 @@ var __font_color_stack: Array[Color] = []
 var __separation_stack: Array[int] = []
 var __next_variation: String = ""
 var __next_min_size: Variant = null # Vector2, or null when unset
+var __next_max_size: Variant = null # Vector2, or null when unset
+var __next_propagate_max_size: Variant = null # bool, or null when unset
 var __next_font_size: int = -1
 var __next_font_color: Variant = null # Color, or null when unset
 var __next_separation: int = -1
@@ -25,7 +30,6 @@ var __next_alignment_h: int = -1
 var __next_alignment_v: int = -1
 var __next_tooltip: String = ""
 var __next_anchors_preset: int = -1
-
 
 @export_group("Defaults", "_default")
 @export var _default_slider_v_height: float = 50
@@ -65,8 +69,16 @@ func _process(_delta: float) -> void:
 	if not __separation_stack.is_empty():
 		push_warning("Leftover separations in the stack: " + str(__separation_stack))
 		__separation_stack.clear()
+	if not __max_size_stack.is_empty():
+		push_warning("Leftover max sizes in the stack: " + str(__max_size_stack))
+		__max_size_stack.clear()
+	if not __propagate_max_size_stack.is_empty():
+		push_warning("Leftover max size propagations in the stack: " + str(__propagate_max_size_stack))
+		__propagate_max_size_stack.clear()
 	__next_variation = ""
 	__next_min_size = null
+	__next_max_size = null
+	__next_propagate_max_size = null
 	__next_font_size = -1
 	__next_font_color = null
 	__next_separation = -1
@@ -171,6 +183,65 @@ func pop_minimum_size(count: int = 1) -> void:
 	for i in count:
 		assert(not __min_size_stack.is_empty(), "Attempted to pop empty stack")
 		__min_size_stack.pop_back()
+
+## Set maximum size of the [i]next[/i] element that will be created
+## ([member Control.custom_maximum_size]). A negative value leaves that axis
+## unbounded. Takes precedence over [method ImGui.push_max_size] (replacing it
+## on both axes) and, like in Godot, over the minimum size. Mostly useful for
+## capping widgets that expand to fill their container; see
+## [method ImGui.next_propagate_max_size] to bound a container's children too.
+func next_max_size(max_width: float, max_height: float) -> void:
+	__next_max_size = Vector2(max_width, max_height)
+
+## Convenience method for [method ImGui.next_max_size]. Height stays unbounded.
+func next_max_width(max_width: float) -> void:
+	next_max_size(max_width, -1)
+
+## Convenience method for [method ImGui.next_max_size]. Width stays unbounded.
+func next_max_height(max_height: float) -> void:
+	next_max_size(-1, max_height)
+
+## All future [Control]s created with this ImGui will get [param max_width] and
+## [param max_height] assigned to [member Control.custom_maximum_size] until it
+## is popped with [method ImGui.pop_max_size]; negative means unbounded. Note
+## this includes every container you open in between — usually
+## [method ImGui.next_max_size] is what you want.
+func push_max_size(max_width: float, max_height: float) -> void:
+	__max_size_stack.append(Vector2(max_width, max_height))
+
+## Convenience method for [method ImGui.push_max_size]. Height stays unbounded.
+func push_max_width(max_width: float) -> void:
+	push_max_size(max_width, -1)
+
+## Convenience method for [method ImGui.push_max_size]. Width stays unbounded.
+func push_max_height(max_height: float) -> void:
+	push_max_size(-1, max_height)
+
+func pop_max_size(count: int = 1) -> void:
+	assert(count >= 1)
+	for i in count:
+		assert(not __max_size_stack.is_empty(), "Attempted to pop empty stack")
+		__max_size_stack.pop_back()
+
+## [member Control.propagate_maximum_size] for only the [i]next[/i] element.
+## When [code]true[/code] the element's children inherit its maximum size as
+## their own cap — without it only the element's own rect is bounded, and
+## children that don't fill it (e.g. with [constant Control.SIZE_SHRINK_BEGIN])
+## can still overflow. Takes precedence over [method ImGui.push_propagate_max_size].
+func next_propagate_max_size(propagate: bool = true) -> void:
+	__next_propagate_max_size = propagate
+
+## All future [Control]s created with this ImGui will get [param propagate]
+## assigned to [member Control.propagate_maximum_size] until it is popped with
+## [method ImGui.pop_propagate_max_size].
+func push_propagate_max_size(propagate: bool = true) -> void:
+	__propagate_max_size_stack.append(propagate)
+
+func pop_propagate_max_size(count: int = 1) -> void:
+	assert(count >= 1)
+	for i in count:
+		assert(not __propagate_max_size_stack.is_empty(), "Attempted to pop empty stack")
+		__propagate_max_size_stack.pop_back()
 
 
 ## All future [Control]s render text at [param font_size] until popped with
@@ -1566,6 +1637,28 @@ func _apply_styling(element: Control) -> void:
 		__next_min_size = null
 	else:
 		element.custom_minimum_size = Vector2.ZERO if __min_size_stack.is_empty() else __min_size_stack.back()
+
+	var max_size := Vector2(-1, -1)
+	if __next_max_size != null:
+		max_size = __next_max_size
+		__next_max_size = null
+	elif not __max_size_stack.is_empty():
+		max_size = __max_size_stack.back()
+	# Negative means unbounded. The engine normalizes that to -1 itself, but only
+	# after its "unchanged?" early-out — so hand it the normalized value, or a
+	# computed max like -37 redoes the max-size bookkeeping every single frame.
+	element.custom_maximum_size = Vector2(
+		-1.0 if max_size.x < 0.0 else max_size.x,
+		-1.0 if max_size.y < 0.0 else max_size.y,
+	)
+
+	var propagate_max_size := false
+	if __next_propagate_max_size != null:
+		propagate_max_size = __next_propagate_max_size
+		__next_propagate_max_size = null
+	elif not __propagate_max_size_stack.is_empty():
+		propagate_max_size = __propagate_max_size_stack.back()
+	element.propagate_maximum_size = propagate_max_size
 
 	if __next_alignment_h >= 0:
 		element.size_flags_horizontal = __next_alignment_h
