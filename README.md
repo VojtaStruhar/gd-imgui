@@ -43,6 +43,12 @@ embedded imgui (see `embed`) is bounded by it. A zero-sized root still works
 (fitted scroll then clamps to the screen instead), it's just less
 predictable to reason about.
 
+Theming goes through Godot's normal theme inheritance, which only flows
+through `Control`s: if your imgui sits under a `CanvasLayer` (typical for
+in-game overlays), a `Theme` assigned to a `Control` above the layer never
+reaches it — `next_variation` would be applied to the nodes but have no
+visible effect. Assign the `Theme` to the `Imgui` node itself instead.
+
 ```gdscript
 extends Control
 # scene: Control (this script) -> Container ("Imgui", imgui.gd attached)
@@ -114,15 +120,21 @@ Some features have different names to be familiar to Godot developers._
 - **Styling**
   - [x] `next_*` methods in addition to `push` and `pop` for pretty much
     everything: `next_variation`, `next_font_size`, `next_font_color`,
-    `next_separation`, `next_alignment_h/v`, `next_min_size`, `next_tooltip`,
-    `next_anchors_preset`
+    `next_autowrap_mode`, `next_separation`, `next_alignment_h/v`, `next_min_size`, `next_max_size`,
+    `next_propagate_max_size`, `next_tooltip`, `next_anchors_preset`
   - [x] Enabled / Disabled inputs
   - [x] [Theme variations](https://docs.godotengine.org/en/stable/tutorials/ui/gui_theme_type_variations.html)
   - [x] Common Theme overrides
     - [x] Separation (`push_separation`)
     - [x] Font size (`push_font_size`)
     - [x] Font color (`push_font_color`)
+  - [x] Label word wrap (`push_autowrap_mode` / `next_autowrap_mode`, for
+    `label` and `rich_label`)
   - [x] Minimum Control size (`push_min_size` / `next_min_size`)
+  - [x] Maximum Control size (`push_max_size` / `next_max_size`, negative =
+    unbounded on that axis) and `propagate_maximum_size`
+    (`push_propagate_max_size` / `next_propagate_max_size`) to cap a
+    container's children as well
   - [x] Anchor presets (`next_anchors_preset`) / Expand flags (`push_alignment_h/v`)
   - [x] Label text alignment
   - [x] Rich text label (`rich_label`, BBCode)
@@ -166,7 +178,7 @@ editor and run it with F6 (Run Current Scene):
 | `demo_textfield` | `textfield` incl. password mode, `textedit` |
 | `demo_radio` | `radio` — exclusive selection via a real `ButtonGroup` |
 | `demo_vector` | `vector2` / `vector3` — composite axis-colored number rows |
-| `demo_styling` | `push`/`next` font size & color, separation, tooltips |
+| `demo_styling` | `push`/`next` font size & color, label word wrap, separation, max size (+ propagation), tooltips |
 | `demo_embed` | `embed` — your own persistent node inside the imgui |
 | `demo_nested_imgui` | whole demo scenes (own ImGui each) embedded as tabs |
 | `demo_texture_stretch` | `texture_rect` stretch & expand modes |

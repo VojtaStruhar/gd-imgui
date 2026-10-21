@@ -1,10 +1,14 @@
 extends Control
 ## Demonstrates the styling API: push_font_size / push_font_color /
-## push_separation / next_max_size / next_tooltip — imperative styling for
-## attributes that would otherwise need theme (variation) edits.
+## push_separation / push_autowrap_mode / next_max_size / next_tooltip — imperative
+## styling for attributes that would otherwise need theme (variation) edits.
+
+# Indexes match TextServer.AutowrapMode.
+const WRAP_MODES: Array[String] = ["Off", "Arbitrary", "Word", "Word (smart)"]
 
 @onready var g: ImGui = $Imgui
 
+var wrap_mode: int = TextServer.AUTOWRAP_WORD
 var font_size := 24
 var font_color := Color(1.0, 0.6, 0.3)
 var separation := 16
@@ -49,6 +53,16 @@ func _process(_delta: float) -> void:
 		g.button("B%d" % i)
 	g.end_hbox()
 	g.pop_separation()
+	g.separator()
+
+	g.label("push_autowrap_mode wraps labels at the width they get (capped to 240px here):")
+	wrap_mode = g.dropdown(wrap_mode, WRAP_MODES)
+	g.push_autowrap_mode(wrap_mode as TextServer.AutowrapMode)
+	g.next_max_width(240)
+	g.label("Labels don't wrap unless told to. Every label under this push breaks its lines at the mode picked above.")
+	g.next_max_width(240)
+	g.rich_label("[b]Rich labels[/b] follow the same mode, [color=orange]markup included[/color].")
+	g.pop_autowrap_mode()
 	g.separator()
 
 	g.label("next_max_width caps a widget that would fill the panel:")

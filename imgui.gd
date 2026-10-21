@@ -18,6 +18,7 @@ var __alignment_horizontal_stack: Array[SizeFlags] = []
 var __alignment_vertical_stack: Array[SizeFlags] = []
 var __font_size_stack: Array[int] = []
 var __font_color_stack: Array[Color] = []
+var __autowrap_mode_stack: Array[TextServer.AutowrapMode] = []
 var __separation_stack: Array[int] = []
 var __next_variation: String = ""
 var __next_min_size: Variant = null # Vector2, or null when unset
@@ -25,6 +26,7 @@ var __next_max_size: Variant = null # Vector2, or null when unset
 var __next_propagate_max_size: Variant = null # bool, or null when unset
 var __next_font_size: int = -1
 var __next_font_color: Variant = null # Color, or null when unset
+var __next_autowrap_mode: int = -1
 var __next_separation: int = -1
 var __next_alignment_h: int = -1
 var __next_alignment_v: int = -1
@@ -66,6 +68,9 @@ func _process(_delta: float) -> void:
 	if not __font_color_stack.is_empty():
 		push_warning("Leftover font colors in the stack: " + str(__font_color_stack))
 		__font_color_stack.clear()
+	if not __autowrap_mode_stack.is_empty():
+		push_warning("Leftover autowrap modes in the stack: " + str(__autowrap_mode_stack))
+		__autowrap_mode_stack.clear()
 	if not __separation_stack.is_empty():
 		push_warning("Leftover separations in the stack: " + str(__separation_stack))
 		__separation_stack.clear()
@@ -81,6 +86,7 @@ func _process(_delta: float) -> void:
 	__next_propagate_max_size = null
 	__next_font_size = -1
 	__next_font_color = null
+	__next_autowrap_mode = -1
 	__next_separation = -1
 	__next_alignment_h = -1
 	__next_alignment_v = -1
@@ -111,6 +117,13 @@ func wants_keyboard() -> bool:
 
 ## All future [Control]s created with this ImGui will receive this
 ## [member Control.theme_type_variation] until it is popped with [method ImGui.pop_variation].
+## [br][br]
+## The variation must be defined in a [Theme] that actually reaches this ImGui.
+## Godot's theme inheritance only flows through [Control]s and [Window]s, so if
+## the ImGui sits under a [CanvasLayer] (typical for in-game overlays), a Theme
+## assigned above the layer never arrives: the variation is set on the nodes
+## but has no visible effect. Assign the Theme to the ImGui node itself (it is a
+## [Container], so it has a [member Control.theme]) or to a Control below the layer.
 func push_variation(theme_variation: String) -> void:
 	__theme_variations_stack.append(theme_variation)
 
@@ -121,7 +134,8 @@ func pop_variation(count: int = 1) -> void:
 		__theme_variations_stack.pop_back()
 
 ## [member Control.theme_type_variation] for only the [i]next[/i] element.
-## Takes precedence over [method push_variation].
+## Takes precedence over [method push_variation], which also explains where the
+## Theme defining the variation has to be assigned.
 func next_variation(theme_variation: String) -> void:
 	__next_variation = theme_variation
 
@@ -282,6 +296,32 @@ func pop_font_color(count: int = 1) -> void:
 ## [method push_font_color].
 func next_font_color(color: Color) -> void:
 	__next_font_color = color
+
+
+## All future labels ([method label], [method rich_label]) wrap their text per
+## [param mode] until popped with [method pop_autowrap_mode]; other widgets
+## ignore it. Without any push, labels keep the engine default: [Label] doesn't
+## wrap, [RichTextLabel] breaks at words ([constant TextServer.AUTOWRAP_WORD_SMART]).
+## [br][br]
+## A wrapping label reports almost no minimum width, so it wraps at whatever
+## width its container ends up with — give it one with [method next_min_width]
+## or [method next_max_width] if nothing else does.
+func push_autowrap_mode(mode: TextServer.AutowrapMode) -> void:
+	__autowrap_mode_stack.append(mode)
+
+
+func pop_autowrap_mode(count: int = 1) -> void:
+	assert(count >= 1)
+	for i in count:
+		assert(not __autowrap_mode_stack.is_empty(), "Attempted to pop empty stack")
+		__autowrap_mode_stack.pop_back()
+
+
+## Autowrap mode for only the [i]next[/i] element — so it has to directly precede
+## the label, any other widget would consume it. Takes precedence over
+## [method push_autowrap_mode].
+func next_autowrap_mode(mode: TextServer.AutowrapMode) -> void:
+	__next_autowrap_mode = mode
 
 
 ## All future containers (box, flow, grid, split) space their children
@@ -1524,8 +1564,7 @@ func _build_window_titlebar(window: PanelContainer) -> PanelContainer:
 ## that variation with a "panel" stylebox. Only runs once, at the title bar's
 ## creation.
 func _style_window_titlebar(bar: PanelContainer) -> void:
-	var nearest_theme := _find_effective_theme()
-	if nearest_theme != null and nearest_theme.has_stylebox(&"panel", &"ImGuiWindowTitleBar"):
+	if _theme_chain_has_stylebox(&"panel", &"ImGuiWindowTitleBar"):
 		bar.theme_type_variation = &"ImGuiWindowTitleBar"
 		return
 	var style := StyleBoxFlat.new()
@@ -1535,19 +1574,23 @@ func _style_window_titlebar(bar: PanelContainer) -> void:
 	bar.add_theme_stylebox_override(&"panel", style)
 
 
-## Walks up from this ImGui node to find the nearest ancestor [Control] with a
-## [Theme] assigned — the same resource Godot's own theme inheritance would
-## eventually resolve through. Used only to ask whether [i]that specific
-## resource[/i] explicitly defines something: unlike [method
+## Whether a theme that Godot's own inheritance resolves through for this
+## ImGui's nodes — every [Theme] up the chain, then the project theme —
+## explicitly defines the given stylebox. Unlike [method
 ## Control.has_theme_stylebox], which also matches the engine's built-in
 ## default theme and so can never distinguish "customized" from "not".
-func _find_effective_theme() -> Theme:
+func _theme_chain_has_stylebox(item_name: StringName, theme_type: StringName) -> bool:
+	# Inheritance only flows through Controls and Windows. A CanvasLayer (or any
+	# other node) cuts it, so a theme above one never reaches our nodes — and
+	# must not be counted here, or we'd skip our fallback style for nothing.
 	var node: Node = self
-	while node != null:
-		if node is Control and node.theme != null:
-			return node.theme
+	while node is Control or node is Window:
+		var candidate: Theme = node.theme
+		if candidate != null and candidate.has_stylebox(item_name, theme_type):
+			return true
 		node = node.get_parent()
-	return null
+	var project_theme := ThemeDB.get_project_theme()
+	return project_theme != null and project_theme.has_stylebox(item_name, theme_type)
 
 
 func _imgui_window_titlebar_input(event: InputEvent, window: PanelContainer) -> void:
@@ -1700,6 +1743,20 @@ func _apply_styling(element: Control) -> void:
 			element.add_theme_color_override(&"font_color", font_color)
 		if element is RichTextLabel and (not element.has_theme_color_override(&"default_color") or element.get_theme_color(&"default_color") != font_color):
 			element.add_theme_color_override(&"default_color", font_color)
+
+	var autowrap_mode := -1
+	if __next_autowrap_mode >= 0:
+		autowrap_mode = __next_autowrap_mode
+		__next_autowrap_mode = -1
+	elif not __autowrap_mode_stack.is_empty():
+		autowrap_mode = __autowrap_mode_stack.back()
+	if element is Label or element is RichTextLabel:
+		if autowrap_mode < 0:
+			# Not a theme item, so "unset" can't mean removing an override: restore
+			# this node type's engine default, or a reused node keeps last frame's wrap.
+			autowrap_mode = TextServer.AUTOWRAP_WORD_SMART if element is RichTextLabel else TextServer.AUTOWRAP_OFF
+		if element.autowrap_mode != autowrap_mode:
+			element.autowrap_mode = autowrap_mode
 
 	var separation := -1
 	if __next_separation >= 0:

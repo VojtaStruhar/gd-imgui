@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://3ojle085h0kj"]
+
+[ext_resource type="Script" uid="uid://d1t61xqwt5jlt" path="res://test_scenes/demo_dear_imgui.gd" id="1_igydl"]
+[ext_resource type="Script" uid="uid://bo18f7fx555fw" path="res://imgui.gd" id="1_qdgok"]
+
+[node name="DemoDearImgui" type="Control" unique_id=1759339660]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_igydl")
+
+[node name="ImGui" type="VBoxContainer" parent="." unique_id=772145994]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_qdgok")
