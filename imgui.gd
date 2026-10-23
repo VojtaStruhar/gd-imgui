@@ -30,6 +30,9 @@ var __next_autowrap_mode: int = -1
 var __next_separation: int = -1
 var __next_alignment_h: int = -1
 var __next_alignment_v: int = -1
+## When >= 0, the next [method dropdown] limits its [PopupMenu] height. A taller
+## item list scrolls inside the popup. Consumed by that call.
+var __next_dropdown_popup_height: float = -1.0
 var __next_tooltip: String = ""
 var __next_anchors_preset: int = -1
 
@@ -90,6 +93,7 @@ func _process(_delta: float) -> void:
 	__next_separation = -1
 	__next_alignment_h = -1
 	__next_alignment_v = -1
+	__next_dropdown_popup_height = -1.0
 	__next_tooltip = ""
 	__next_anchors_preset = -1
 
@@ -134,8 +138,7 @@ func pop_variation(count: int = 1) -> void:
 		__theme_variations_stack.pop_back()
 
 ## [member Control.theme_type_variation] for only the [i]next[/i] element.
-## Takes precedence over [method push_variation], which also explains where the
-## Theme defining the variation has to be assigned.
+## Takes precedence over [method push_variation].
 func next_variation(theme_variation: String) -> void:
 	__next_variation = theme_variation
 
@@ -360,6 +363,12 @@ func next_anchors_preset(preset: Control.LayoutPreset) -> void:
 	__next_anchors_preset = preset
 
 
+## Caps the popup of the [i]next[/i] [OptionButton] at [param height] pixels.
+## Items past that scroll inside the [PopupMenu].
+func next_dropdown_popup_height(height: float) -> void:
+	__next_dropdown_popup_height = height
+
+
 func begin_tabs() -> void:
 	next_separation(0)
 	begin_vbox()
@@ -476,7 +485,7 @@ func checkbox(on: bool, text: String = "") -> bool:
 	if not __inputs.erase(np):
 		current.set_pressed_no_signal(on)
 		
-		
+	current.text = text
 	__cursor[__cursor.size() - 1] += 1 # Next node
 
 	return current.button_pressed
@@ -721,27 +730,25 @@ func dropdown(selected_index: int, options: Array[String], icons: Array[Texture2
 		ob.name = str(__cursor).validate_node_name()
 		ob.item_selected.connect(func(_i: int) -> void: _register_dropdown_select(ob))
 		ob.expand_icon = true
-
+		
 		__parent.add_child(ob)
 		current = ob
-
+	
 	if not icons.is_empty():
 		assert(options.size() == icons.size(), "The number of text options and icons must match!")
-
+	
 	for i: int in range(options.size()):
 		var text := options[i]
 		if i < current.item_count:
 			current.set_item_text(i, text)
-			# Nodes are reused, so icons that were dropped have to be cleared too.
-			var icon: Texture2D = null if icons.is_empty() else icons[i]
-			if current.get_item_icon(i) != icon:
-				current.set_item_icon(i, icon)
+			if not icons.is_empty():
+				current.set_item_icon(i, icons[i])
 		else:
 			if icons.is_empty():
 				current.add_item(text)
 			else:
 				current.add_icon_item(icons[i], text)
-
+			
 	while current.item_count > options.size():
 		current.remove_item(current.item_count - 1)
 
@@ -1585,7 +1592,8 @@ func _build_window_titlebar(window: PanelContainer) -> PanelContainer:
 ## that variation with a "panel" stylebox. Only runs once, at the title bar's
 ## creation.
 func _style_window_titlebar(bar: PanelContainer) -> void:
-	if _theme_chain_has_stylebox(&"panel", &"ImGuiWindowTitleBar"):
+	var nearest_theme := _find_effective_theme()
+	if nearest_theme != null and nearest_theme.has_stylebox(&"panel", &"ImGuiWindowTitleBar"):
 		bar.theme_type_variation = &"ImGuiWindowTitleBar"
 		return
 	var style := StyleBoxFlat.new()
@@ -1595,23 +1603,19 @@ func _style_window_titlebar(bar: PanelContainer) -> void:
 	bar.add_theme_stylebox_override(&"panel", style)
 
 
-## Whether a theme that Godot's own inheritance resolves through for this
-## ImGui's nodes — every [Theme] up the chain, then the project theme —
-## explicitly defines the given stylebox. Unlike [method
+## Walks up from this ImGui node to find the nearest ancestor [Control] with a
+## [Theme] assigned — the same resource Godot's own theme inheritance would
+## eventually resolve through. Used only to ask whether [i]that specific
+## resource[/i] explicitly defines something: unlike [method
 ## Control.has_theme_stylebox], which also matches the engine's built-in
 ## default theme and so can never distinguish "customized" from "not".
-func _theme_chain_has_stylebox(item_name: StringName, theme_type: StringName) -> bool:
-	# Inheritance only flows through Controls and Windows. A CanvasLayer (or any
-	# other node) cuts it, so a theme above one never reaches our nodes — and
-	# must not be counted here, or we'd skip our fallback style for nothing.
+func _find_effective_theme() -> Theme:
 	var node: Node = self
-	while node is Control or node is Window:
-		var candidate: Theme = node.theme
-		if candidate != null and candidate.has_stylebox(item_name, theme_type):
-			return true
+	while node != null:
+		if node is Control and node.theme != null:
+			return node.theme
 		node = node.get_parent()
-	var project_theme := ThemeDB.get_project_theme()
-	return project_theme != null and project_theme.has_stylebox(item_name, theme_type)
+	return null
 
 
 func _imgui_window_titlebar_input(event: InputEvent, window: PanelContainer) -> void:
@@ -1801,6 +1805,16 @@ func _apply_styling(element: Control) -> void:
 	if __next_anchors_preset >= 0:
 		_apply_anchors_preset(element, __next_anchors_preset as Control.LayoutPreset)
 		__next_anchors_preset = -1
+
+	var popup_height := __next_dropdown_popup_height
+	__next_dropdown_popup_height = -1.0
+	if popup_height >= 0.0 and element is OptionButton:
+		var popup_menu := (element as OptionButton).get_popup()
+		# Width must be > 0. A max size of (0, height) is rejected once the menu's
+		# minimum width is wider than 0, and the height limit is dropped with it.
+		var max_size_popup := Vector2i(100000, int(popup_height))
+		if popup_menu.max_size != max_size_popup:
+			popup_menu.max_size = max_size_popup
 
 
 ## Adds or removes a theme constant override ([param value] < 0 removes),
