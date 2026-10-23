@@ -104,6 +104,8 @@ Some features have different names to be familiar to Godot developers._
   - [x] Number field
   - [x] Text field
   - [x] Combo box (OptionButton)
+	- [x] Per-item control (`dropdown_v`) — one dictionary per popup item with
+	`text`, `icon`, `id`, `disabled` and `separator`
   - [x] Toggle
   - [x] Checkbox
   - [x] Separators
@@ -122,22 +124,22 @@ Some features have different names to be familiar to Godot developers._
 	for game controls doesn't fight the tool panels
 - **Styling**
   - [x] `next_*` methods in addition to `push` and `pop` for pretty much
-    everything: `next_variation`, `next_font_size`, `next_font_color`,
-    `next_autowrap_mode`, `next_separation`, `next_alignment_h/v`, `next_min_size`, `next_max_size`,
-    `next_propagate_max_size`, `next_tooltip`, `next_anchors_preset`
+	everything: `next_variation`, `next_font_size`, `next_font_color`,
+	`next_autowrap_mode`, `next_separation`, `next_alignment_h/v`, `next_min_size`, `next_max_size`,
+	`next_propagate_max_size`, `next_tooltip`, `next_anchors_preset`
   - [x] Enabled / Disabled inputs
   - [x] [Theme variations](https://docs.godotengine.org/en/stable/tutorials/ui/gui_theme_type_variations.html)
   - [x] Common Theme overrides
-    - [x] Separation (`push_separation`)
-    - [x] Font size (`push_font_size`)
-    - [x] Font color (`push_font_color`)
+	- [x] Separation (`push_separation`)
+	- [x] Font size (`push_font_size`)
+	- [x] Font color (`push_font_color`)
   - [x] Label word wrap (`push_autowrap_mode` / `next_autowrap_mode`, for
-    `label` and `rich_label`)
+	`label` and `rich_label`)
   - [x] Minimum Control size (`push_min_size` / `next_min_size`)
   - [x] Maximum Control size (`push_max_size` / `next_max_size`, negative =
-    unbounded on that axis) and `propagate_maximum_size`
-    (`push_propagate_max_size` / `next_propagate_max_size`) to cap a
-    container's children as well
+	unbounded on that axis) and `propagate_maximum_size`
+	(`push_propagate_max_size` / `next_propagate_max_size`) to cap a
+	container's children as well
   - [x] Anchor presets (`next_anchors_preset`) / Expand flags (`push_alignment_h/v`)
   - [x] Label text alignment
   - [x] Rich text label (`rich_label`, BBCode)

@@ -764,6 +764,63 @@ func dropdown(selected_index: int, options: Array[String], icons: Array[Texture2
 	return current.selected
 
 
+## Like [method dropdown], but each entry of [param items] is a [Dictionary]
+## describing one popup item with the properties the inspector offers:
+## [code]text[/code] ([String]), [code]icon[/code] ([Texture2D]), [code]id[/code]
+## ([int], defaults to the item's index), [code]disabled[/code] ([bool]) and
+## [code]separator[/code] ([bool]; a separator's [code]text[/code] is its label).
+## Every key is optional, a missing one falls back to its default. The
+## [param selected_index] counts separators too, and the selected index (not the
+## id) is returned.
+func dropdown_v(selected_index: int, items: Array[Dictionary], enabled: bool = true) -> int:
+	var current := _get_current_node()
+	if current is not OptionButton:
+		_destroy_rest_of_this_layout_level()
+		var ob := OptionButton.new()
+		ob.name = str(__cursor).validate_node_name()
+		ob.item_selected.connect(func(_i: int) -> void: _register_dropdown_select(ob))
+		ob.expand_icon = true
+
+		__parent.add_child(ob)
+		current = ob
+
+	# OptionButton's text/icon setters queue a size refresh even for an unchanged
+	# value, and the popup's own early-outs vary by engine version, so every
+	# write is guarded.
+	for i: int in items.size():
+		if i >= current.item_count:
+			current.add_item("")
+		var item := items[i]
+		var text: String = item.get("text", "")
+		if current.get_item_text(i) != text:
+			current.set_item_text(i, text)
+		var icon: Texture2D = item.get("icon")
+		if current.get_item_icon(i) != icon:
+			current.set_item_icon(i, icon)
+		var id: int = item.get("id", i)
+		if current.get_item_id(i) != id:
+			current.set_item_id(i, id)
+		var is_disabled: bool = item.get("disabled", false)
+		if current.is_item_disabled(i) != is_disabled:
+			current.set_item_disabled(i, is_disabled)
+		var is_separator: bool = item.get("separator", false)
+		if current.is_item_separator(i) != is_separator:
+			current.get_popup().set_item_as_separator(i, is_separator)
+
+	while current.item_count > items.size():
+		current.remove_item(current.item_count - 1)
+
+	_apply_styling(current)
+	current.disabled = !enabled
+
+	if not __inputs.erase(_np(current)): # Means that there is no input
+		current.selected = selected_index
+
+	__cursor[__cursor.size() - 1] += 1 # Next node
+
+	return current.selected
+
+
 ## Mutually exclusive set of options, Dear-ImGui-style radio buttons. Built on
 ## a real [ButtonGroup] so Godot itself enforces exclusivity the instant one is
 ## clicked — there's never a frame where two options can appear selected.

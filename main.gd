@@ -6,6 +6,14 @@ var show_advanced := true
 
 var resource_options: Array[String] = ["Wisdom", "Gear", "Mana"]
 var resource_selected := 0
+var difficulty_options: Array[Dictionary] = [
+	{ "text": "Easy" },
+	{ "text": "Normal" },
+	{ "text": "Hard" },
+	{ "separator": true, "text": "Locked" },
+	{ "text": "Nightmare", "disabled": true },
+]
+var difficulty_selected := 1
 var server: String = "https://server.vojtechstruhar.com"
 var music_volume: float = 80
 var probabilities: Dictionary[String, float] = {
@@ -188,6 +196,8 @@ func _advanced_tab() -> void:
 	
 	g.label("Resources:")
 	resource_selected = g.dropdown(resource_selected, resource_options)
+	g.label("Difficulty:")
+	difficulty_selected = g.dropdown_v(difficulty_selected, difficulty_options)
 	g.end_grid()
 	
 	g.label("+100 %s" % resource_options[resource_selected])
