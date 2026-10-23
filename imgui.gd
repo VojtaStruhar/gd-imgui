@@ -138,7 +138,8 @@ func pop_variation(count: int = 1) -> void:
 		__theme_variations_stack.pop_back()
 
 ## [member Control.theme_type_variation] for only the [i]next[/i] element.
-## Takes precedence over [method push_variation].
+## Takes precedence over [method push_variation], which also explains where the
+## Theme defining the variation has to be assigned.
 func next_variation(theme_variation: String) -> void:
 	__next_variation = theme_variation
 
@@ -1651,8 +1652,7 @@ func _build_window_titlebar(window: PanelContainer) -> PanelContainer:
 ## that variation with a "panel" stylebox. Only runs once, at the title bar's
 ## creation.
 func _style_window_titlebar(bar: PanelContainer) -> void:
-	var nearest_theme := _find_effective_theme()
-	if nearest_theme != null and nearest_theme.has_stylebox(&"panel", &"ImGuiWindowTitleBar"):
+	if _theme_chain_has_stylebox(&"panel", &"ImGuiWindowTitleBar"):
 		bar.theme_type_variation = &"ImGuiWindowTitleBar"
 		return
 	var style := StyleBoxFlat.new()
@@ -1662,19 +1662,23 @@ func _style_window_titlebar(bar: PanelContainer) -> void:
 	bar.add_theme_stylebox_override(&"panel", style)
 
 
-## Walks up from this ImGui node to find the nearest ancestor [Control] with a
-## [Theme] assigned — the same resource Godot's own theme inheritance would
-## eventually resolve through. Used only to ask whether [i]that specific
-## resource[/i] explicitly defines something: unlike [method
+## Whether a theme that Godot's own inheritance resolves through for this
+## ImGui's nodes — every [Theme] up the chain, then the project theme —
+## explicitly defines the given stylebox. Unlike [method
 ## Control.has_theme_stylebox], which also matches the engine's built-in
 ## default theme and so can never distinguish "customized" from "not".
-func _find_effective_theme() -> Theme:
+func _theme_chain_has_stylebox(item_name: StringName, theme_type: StringName) -> bool:
+	# Inheritance only flows through Controls and Windows. A CanvasLayer (or any
+	# other node) cuts it, so a theme above one never reaches our nodes — and
+	# must not be counted here, or we'd skip our fallback style for nothing.
 	var node: Node = self
-	while node != null:
-		if node is Control and node.theme != null:
-			return node.theme
+	while node is Control or node is Window:
+		var candidate: Theme = node.theme
+		if candidate != null and candidate.has_stylebox(item_name, theme_type):
+			return true
 		node = node.get_parent()
-	return null
+	var project_theme := ThemeDB.get_project_theme()
+	return project_theme != null and project_theme.has_stylebox(item_name, theme_type)
 
 
 func _imgui_window_titlebar_input(event: InputEvent, window: PanelContainer) -> void:
