@@ -138,8 +138,7 @@ func pop_variation(count: int = 1) -> void:
 		__theme_variations_stack.pop_back()
 
 ## [member Control.theme_type_variation] for only the [i]next[/i] element.
-## Takes precedence over [method push_variation], which also explains where the
-## Theme defining the variation has to be assigned.
+## Takes precedence over [method push_variation].
 func next_variation(theme_variation: String) -> void:
 	__next_variation = theme_variation
 
@@ -1278,6 +1277,9 @@ func begin_scroll_v(min_height: float = 0.0, max_height: float = -1.0) -> void:
 		# without a size (like a bare Container dropped into a scene) are
 		# bounded by the screen only.
 		available = minf(available, get_global_rect().end.y - current.get_global_rect().position.y)
+	# Global rects are in screen pixels, custom_minimum_size is in local units —
+	# undo ancestor scale (e.g. ResponsiveWindow.ui_scale) or the fit overshoots.
+	available /= current.get_global_transform().get_scale().y
 	if __parent is PanelContainer:
 		available -= __parent.get_theme_stylebox(&"panel").get_margin(SIDE_BOTTOM)
 	if max_height >= 0.0:
@@ -1558,7 +1560,7 @@ func begin_window(title: String, open: bool = true, closable: bool = false, init
 	current.visible = is_open
 
 	var viewport_size := get_viewport_rect().size
-	current.global_position = current.global_position.clamp(Vector2.ZERO, (viewport_size - current.size).max(Vector2.ZERO))
+	current.global_position = current.global_position.clamp(Vector2.ZERO, (viewport_size - current.get_global_rect().size).max(Vector2.ZERO))
 
 	__parent = current
 	__cursor.append(0)
@@ -1652,7 +1654,8 @@ func _build_window_titlebar(window: PanelContainer) -> PanelContainer:
 ## that variation with a "panel" stylebox. Only runs once, at the title bar's
 ## creation.
 func _style_window_titlebar(bar: PanelContainer) -> void:
-	if _theme_chain_has_stylebox(&"panel", &"ImGuiWindowTitleBar"):
+	var nearest_theme := _find_effective_theme()
+	if nearest_theme != null and nearest_theme.has_stylebox(&"panel", &"ImGuiWindowTitleBar"):
 		bar.theme_type_variation = &"ImGuiWindowTitleBar"
 		return
 	var style := StyleBoxFlat.new()
@@ -1662,23 +1665,19 @@ func _style_window_titlebar(bar: PanelContainer) -> void:
 	bar.add_theme_stylebox_override(&"panel", style)
 
 
-## Whether a theme that Godot's own inheritance resolves through for this
-## ImGui's nodes — every [Theme] up the chain, then the project theme —
-## explicitly defines the given stylebox. Unlike [method
+## Walks up from this ImGui node to find the nearest ancestor [Control] with a
+## [Theme] assigned — the same resource Godot's own theme inheritance would
+## eventually resolve through. Used only to ask whether [i]that specific
+## resource[/i] explicitly defines something: unlike [method
 ## Control.has_theme_stylebox], which also matches the engine's built-in
 ## default theme and so can never distinguish "customized" from "not".
-func _theme_chain_has_stylebox(item_name: StringName, theme_type: StringName) -> bool:
-	# Inheritance only flows through Controls and Windows. A CanvasLayer (or any
-	# other node) cuts it, so a theme above one never reaches our nodes — and
-	# must not be counted here, or we'd skip our fallback style for nothing.
+func _find_effective_theme() -> Theme:
 	var node: Node = self
-	while node is Control or node is Window:
-		var candidate: Theme = node.theme
-		if candidate != null and candidate.has_stylebox(item_name, theme_type):
-			return true
+	while node != null:
+		if node is Control and node.theme != null:
+			return node.theme
 		node = node.get_parent()
-	var project_theme := ThemeDB.get_project_theme()
-	return project_theme != null and project_theme.has_stylebox(item_name, theme_type)
+	return null
 
 
 func _imgui_window_titlebar_input(event: InputEvent, window: PanelContainer) -> void:
