@@ -113,7 +113,10 @@ Some features have different names to be familiar to Godot developers._
   - [x] Color picker (`color_picker`)
   - [x] Radio buttons (`radio`) — built on a real `ButtonGroup`, so Godot
 	itself guarantees exactly one option is ever selected
-  - [x] Icons on buttons (`button(text, enabled, icon)`)
+  - [x] Icons on buttons (`button(text, enabled, icon)`) and dropdown options
+	(`dropdown(selected_index, options, icons)`) — they scale to fit the
+	widget instead of enlarging it, so give icon-only buttons a size with
+	`next_min_size`
   - [x] Input capture for game integration: `wants_mouse()` / `wants_keyboard()`
 	tell you when mouse/keyboard input belongs to the UI, so polling `Input`
 	for game controls doesn't fight the tool panels

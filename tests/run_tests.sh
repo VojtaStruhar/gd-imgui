@@ -52,7 +52,7 @@ run_test() {
 }
 
 echo "=== behavior tests (headless) ==="
-for t in test_widgets test_embed test_nested test_toplevel_prune test_radio test_composite_widgets test_max_size test_autowrap test_theme_chain; do
+for t in test_widgets test_embed test_nested test_toplevel_prune test_radio test_composite_widgets test_max_size test_autowrap test_icons test_theme_chain; do
 	run_test headless "$t"
 done
 

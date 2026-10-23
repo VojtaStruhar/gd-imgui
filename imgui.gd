@@ -622,6 +622,9 @@ func separator_h() -> void:
 	__cursor[__cursor.size() - 1] += 1 # Next node
 
 
+## [param icon] is scaled to fit the button instead of adding to its size, so an
+## icon-only button (empty [param text]) collapses to a sliver unless it gets a
+## size, e.g. from [method next_min_size].
 func button(text: String, enabled: bool = true, icon: Texture2D = null) -> bool:
 	var current := _get_current_node()
 	if current == null or current.get_class() != "Button":
@@ -629,6 +632,7 @@ func button(text: String, enabled: bool = true, icon: Texture2D = null) -> bool:
 		var b := Button.new()
 		b.name = str(__cursor).validate_node_name()
 		b.pressed.connect(_register_button_press.bind(b))
+		b.expand_icon = true
 		__parent.add_child(b)
 		current = b
 
@@ -705,22 +709,39 @@ func textedit(text: String, enabled: bool = true) -> String:
 	return current.text
 
 
-func dropdown(selected_index: int, options: Array[String], enabled: bool = true) -> int:
+## [param icons] is optional, one texture per option ([code]null[/code] for
+## none). On the button face an icon scales to fit, like in [method button]; the
+## popup list shows it at its native size, so cap large textures with the
+## [code]icon_max_width[/code] theme constant of [PopupMenu].
+func dropdown(selected_index: int, options: Array[String], icons: Array[Texture2D] = [], enabled: bool = true) -> int:
 	var current := _get_current_node()
 	if current is not OptionButton:
 		_destroy_rest_of_this_layout_level()
 		var ob := OptionButton.new()
 		ob.name = str(__cursor).validate_node_name()
 		ob.item_selected.connect(func(_i: int) -> void: _register_dropdown_select(ob))
+		ob.expand_icon = true
+
 		__parent.add_child(ob)
 		current = ob
 
+	if not icons.is_empty():
+		assert(options.size() == icons.size(), "The number of text options and icons must match!")
+
 	for i: int in range(options.size()):
-		var text = options[i]
+		var text := options[i]
 		if i < current.item_count:
 			current.set_item_text(i, text)
+			# Nodes are reused, so icons that were dropped have to be cleared too.
+			var icon: Texture2D = null if icons.is_empty() else icons[i]
+			if current.get_item_icon(i) != icon:
+				current.set_item_icon(i, icon)
 		else:
-			current.add_item(text)
+			if icons.is_empty():
+				current.add_item(text)
+			else:
+				current.add_icon_item(icons[i], text)
+
 	while current.item_count > options.size():
 		current.remove_item(current.item_count - 1)
 
