@@ -741,8 +741,10 @@ func dropdown(selected_index: int, options: Array[String], icons: Array[Texture2
 		var text := options[i]
 		if i < current.item_count:
 			current.set_item_text(i, text)
-			if not icons.is_empty():
-				current.set_item_icon(i, icons[i])
+			# No icons passed means no icons, also on items an earlier call gave one.
+			var icon: Texture2D = icons[i] if not icons.is_empty() else null
+			if current.get_item_icon(i) != icon:
+				current.set_item_icon(i, icon)
 		else:
 			if icons.is_empty():
 				current.add_item(text)
